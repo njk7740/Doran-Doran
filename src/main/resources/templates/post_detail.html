@@ -1,6 +1,68 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container">
-    <h1 th:text="${post.subject}"></h1>
-    <div th:text="${post.content}"></div>
+<div layout:fragment="content" class="detail-form mx-auto" style="width:80%">
+    <div class="d-flex justify-content-between">
+        <div style="width:70%;">
+            <h1 th:text="${post.subject}" class="text-center"></h1>
+            <div class="d-flex justify-content-between align-items-center border-bottom">
+                <div>
+                    <span class="author-name" th:text="${post.author.nickname}"></span>
+                    <span class="post-createDate"
+                          th:text="${#temporals.format(post.createDate, 'yyyy년 MM월 dd일 HH:mm:ss')}"></span>
+                </div>
+                <div>
+                    <div sec:authorize="isAuthenticated()"
+                         th:if="${#authentication.getPrincipal().getUsername() == post.author.username}"
+                         class="btn-group modify-btn">
+                        <a th:href="@{|/post/modify/${post.id}|}" class="btn btn-outline-primary">수정</a>
+                        <a href="javascript:void(0);" class="delBtn btn btn-outline-primary"
+                           th:data-uri="@{|/post/delete/${post.id}|}">삭제</a>
+                    </div>
+                    <!--좋아요-->
+                    <a th:href="@{|/post/like/${post.id}|}" th:if="${!like}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                             class="bi bi-chat-square-heart" viewBox="0 0 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12ZM2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2Z"/>
+                            <path d="M8 3.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132Z"/>
+                        </svg>
+                    </a>
+                    <a th:href="@{|/post/unlike/${post.id}|}" th:if="${like}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                             class="bi bi-chat-square-heart-fill" viewBox="0 0 16 16">
+                            <path d="M2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2Zm6 3.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132Z"/>
+                        </svg>
+                    </a>
+                    <span style="font-size:20px;font-weight:bold;" th:text="|+${#lists.size(post.liker)}|"></span>
+                </div>
+            </div>
+            <div class="detail-content" th:text="${post.content}" style="white-space:pre-line;"></div>
+        </div>
+        <div class="vr"></div>
+        <!--댓글-->
+        <div class="mt-5" style="width:25%;">
+            <form th:action="@{|/comment/create/${post.id}|}" class="my-3" method="post" th:object="${commentForm}">
+                <div th:replace="~{form_errors :: error}"></div>
+                <div class="input-group">
+                <textarea class="form-control overflow-scroll" th:field="*{content}" rows="3"
+                          placeholder="댓글을 입력해 주세요"></textarea>
+                    <button type="submit" class="btn btn-primary">등록</button>
+                </div>
+            </form>
+            <div class="card my-3" style="width:100%; display:block; overflow:hidden;" th:each="comment : ${post.commentList}">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:text="${comment.content}"></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-0" style="background:#D8DEF0;">
+                        <span th:text="${comment.author.nickname}" style="font-weight:bold; color:#006666;"></span>
+                        <span th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm:ss')}" class="badge text-dark"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
+<script layout:fragment="script">
+    const delBtn = document.querySelector(".delBtn");
+    delBtn.addEventListener('click', function() {
+    if(confirm("정말 삭제하시겠습니까?")) location.href = this.dataset.uri;
+});
+</script>
 </html>

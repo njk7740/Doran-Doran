@@ -1,10 +1,14 @@
 package com.voda.blog.post;
 
+import com.voda.blog.comment.Comment;
+import com.voda.blog.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,4 +22,10 @@ public class Post {
     @Column(columnDefinition = "TEXT")
     private String content;
     private LocalDateTime createDate;
+    @ManyToOne
+    private SiteUser author;
+    @ManyToMany
+    private Set<SiteUser> liker;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Comment> commentList;
 }

@@ -1,10 +1,14 @@
 package com.voda.blog.user;
 
+import com.voda.blog.comment.Comment;
+import com.voda.blog.post.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,7 +22,12 @@ public class SiteUser {
     private String password;
     @Column(length = 10, unique = true)
     private String nickname;
-    @Column(unique = true)
     private String email;
     private LocalDateTime createDate;
+    @OneToMany(mappedBy = "author")
+    private List<Post> postList;
+    @ManyToMany
+    private Set<Post> likePost;
+    @OneToMany(mappedBy = "author")
+    private List<Comment> commentList;
 }

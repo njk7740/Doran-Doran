@@ -1,5 +1,6 @@
 package com.voda.blog.user;
 
+import com.voda.blog.post.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,16 @@ public class UserService {
         user.setEmail(email);
         user.setNickname(nickname);
         user.setCreateDate(LocalDateTime.now());
+        userRepository.save(user);
+    }
+
+    public void like(SiteUser user, Post post) {
+        user.getLikePost().add(post);
+        userRepository.save(user);
+    }
+
+    public void unlike(SiteUser user, Post post) {
+        user.getLikePost().remove(post);
         userRepository.save(user);
     }
 }
