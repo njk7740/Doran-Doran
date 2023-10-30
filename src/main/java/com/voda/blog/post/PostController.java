@@ -1,6 +1,7 @@
 package com.voda.blog.post;
 
 import com.voda.blog.comment.CommentForm;
+import com.voda.blog.comment.CommentService;
 import com.voda.blog.user.SiteUser;
 import com.voda.blog.user.UserService;
 import jakarta.validation.Valid;
@@ -19,13 +20,16 @@ import java.security.Principal;
 public class PostController {
     private final PostService postService;
     private final UserService userService;
+    private final CommentService commentService;
 
     @GetMapping("/list")
     public String list(Model model, Principal principal, @RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "kw", defaultValue = "") String kw) {
-        model.addAttribute("paging", postService.getList(page, kw));
+                       @RequestParam(value = "kw", defaultValue = "") String kw,
+                       @RequestParam(value = "order", defaultValue = "liker") String order) {
+        model.addAttribute("paging", postService.getList(page, kw, order));
         model.addAttribute("kw", kw);
         if (principal != null) model.addAttribute("user", userService.getByUsername(principal.getName()));
+        model.addAttribute("order", order);
         return "post_list";
     }
 
@@ -47,7 +51,8 @@ public class PostController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(@PathVariable("id") Integer id, Model model, Principal principal, CommentForm commentForm) {
+    public String detail(@PathVariable("id") Integer id, Model model, Principal principal, CommentForm commentForm,
+                         @RequestParam(value = "page", defaultValue = "0") int page) {
         Post post = postService.getById(id);
         if (principal != null) {
             SiteUser user = userService.getByUsername(principal.getName());
@@ -55,6 +60,7 @@ public class PostController {
             model.addAttribute("like", post.getLiker().contains(user));
         } else model.addAttribute("like", false);
         model.addAttribute("post", post);
+        model.addAttribute("commentList", commentService.getList(post, page));
         return "post_detail";
     }
 

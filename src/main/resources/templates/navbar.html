@@ -19,15 +19,37 @@
             </button>
         </div>
         <!--오른쪽 네비바 시작-->
-        <div sec:authorize="isAuthenticated()" class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div sec:authorize="isAuthenticated()" class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+             aria-labelledby="offcanvasNavbarLabel">
             <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasNavbarLabel" th:text="|${user.nickname} 님|"></h5>
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel" style="font-weight:bold;">프로필</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" th:href="@{/user/logout}">로그아웃</a>
+                        <div class="card ms-5" style="width:18rem;">
+                            <div class="card-body">
+                                <img th:src="@{/default-profile.png}" style="width:100px;">
+                                <h5 class="card-title text-dark mt-3 mb-0" th:text="${user.nickname}"></h5>
+                            </div>
+                            <ul class="user_info_list list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <span>작성한 포스트 </span>
+                                    <a th:href="@{/user/info/post}" th:text="${#lists.size(user.postList)}"></a>
+                                </li>
+                                <li class="list-group-item">
+                                    <span>좋아한 포스트 </span>
+                                    <a th:href="@{/user/info/like}" th:text="${#lists.size(user.likePost)}"></a>
+                                </li>
+                            </ul>
+                            <div class="card-body" style="height:60px;">
+                                <a th:href="@{/user/info}" class="card-link ch_myInfo">내 정보</a>
+                                <a th:href="@{/user/logout}" class="logout_link card-link" style="color:red;"
+                                   onmouseover="this.style='background:#F66;color:white;'"
+                                   onmouseout="this.style='background:white;color:red;'">로그아웃</a>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </div>

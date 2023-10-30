@@ -1,0 +1,12 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container">
+    <div class="card mb-3" style="width:500px;">
+        <div class="card-body" style="height:400px;">
+            <img th:src="@{/default-profile.png}" style="width:200px;">
+            <h5 class="card-title my-3" th:text="${user.nickname}"></h5>
+            <p class="card-text">백엔드 개발자</p>
+            <p class="card-text">대한민국 대전시</p>
+        </div>
+    </div>
+</div>
+</html>

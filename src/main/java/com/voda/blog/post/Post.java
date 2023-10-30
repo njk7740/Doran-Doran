@@ -26,6 +26,7 @@ public class Post {
     private SiteUser author;
     @ManyToMany
     private Set<SiteUser> liker;
+    private int likerSize;
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> commentList;
 }

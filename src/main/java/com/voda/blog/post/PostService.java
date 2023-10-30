@@ -24,6 +24,7 @@ public class PostService {
         post.setContent(content);
         post.setCreateDate(LocalDateTime.now());
         post.setAuthor(user);
+        post.setLikerSize(0);
         postRepository.save(post);
     }
 
@@ -38,9 +39,10 @@ public class PostService {
         return postRepository.findAll(pageable);
     }
 
-    public Page<Post> getList(int page, String kw) {
+    public Page<Post> getList(int page, String kw, String str) {
         List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createDate"));
+        if(str.equals("recent")) sorts.add(Sort.Order.desc("createDate"));
+        else sorts.add(Sort.Order.desc("likerSize"));
         Pageable pageable = PageRequest.of(page, 12, Sort.by(sorts));
         return postRepository.findBySubjectLike("%" + kw + "%" , pageable);
     }
@@ -63,11 +65,13 @@ public class PostService {
 
     public void like(Post post, SiteUser user) {
         post.getLiker().add(user);
+        post.setLikerSize(post.getLiker().size());
         postRepository.save(post);
     }
 
     public void unlike(Post post, SiteUser user) {
         post.getLiker().remove(user);
+        post.setLikerSize(post.getLiker().size());
         postRepository.save(post);
     }
 }

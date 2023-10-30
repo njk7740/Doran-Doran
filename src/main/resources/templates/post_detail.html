@@ -47,22 +47,95 @@
                     <button type="submit" class="btn btn-primary">등록</button>
                 </div>
             </form>
-            <div class="card my-3" style="width:100%; display:block; overflow:hidden;" th:each="comment : ${post.commentList}">
+            <div th:if="${commentList.totalElements == 0}" class="none-post d-block" style="white-space:pre-line;">
+                댓글이
+                없습니다
+            </div>
+            <div class="card my-3" style="width:100%; display:block;" th:each="comment : ${commentList}">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item" th:text="${comment.content}"></li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center py-0" style="background:#D8DEF0;">
+                    <li class="list-group-item collapse" th:id="|comment_modify_${comment.id}|">
+                        <form th:action="@{|/comment/modify/${comment.id}|}" method="post" th:object="${commentForm}">
+                            <textarea th:field="*{content}"
+                                      placeholder="수정할 내용을 입력해주세요"
+                                      class="form-control overflow-scroll"></textarea>
+                            <div class="text-end my-2">
+                                <button type="submit" class="btn btn-primary">적용</button>
+                            </div>
+                        </form>
+                    </li>
+                    <div sec:authorize="isAuthenticated()"
+                         th:if="${#authentication.getPrincipal().getUsername() == comment.author.username}"
+                         class="btn-group modify-btn">
+                        <a class="btn btn-outline-primary" data-bs-toggle="collapse"
+                           th:href="|#comment_modify_${comment.id}|" role="button" aria-expanded="false"
+                           aria-controls="collapseExample">
+                            수정
+                        </a>
+                        <a href="javascript:void(0);" class="delBtn btn btn-outline-primary"
+                           th:data-uri="@{|/comment/delete/${comment.id}|}">삭제</a>
+                    </div>
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-0"
+                        style="background:#D8DEF0;">
                         <span th:text="${comment.author.nickname}" style="font-weight:bold; color:#006666;"></span>
-                        <span th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm:ss')}" class="badge text-dark"></span>
+                        <span th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm:ss')}"
+                              class="badge text-dark"></span>
                     </li>
                 </ul>
             </div>
+            <!--댓글 페이징-->
+            <ul class="pagination justify-content-center my-5" th:if="${!commentList.isEmpty()}">
+                <li class="page-item" th:classappend="${!commentList.hasPrevious()} ? 'disabled'">
+                    <a class="page-link" th:href="@{?page=0}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-chevron-bar-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M11.854 3.646a.5.5 0 0 1 0 .708L8.207 8l3.647 3.646a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708 0zM4.5 1a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 1 0v-13a.5.5 0 0 0-.5-.5z"/>
+                        </svg>
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${!commentList.hasPrevious()} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${commentList.number-1}|}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-chevron-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                    </a>
+                </li>
+                <li class="page-item" th:each="page : ${#numbers.sequence(0, commentList.totalPages-1)}"
+                    th:classappend="${commentList.number == page} ? 'active'"
+                    th:if="${page >= commentList.number-2 && page <= commentList.number+2}">
+                    <a class="page-link" th:href="@{|?page=${page}|}" th:text="${page}"></a>
+                </li>
+                <li class="page-item" th:classappend="${!commentList.hasNext()} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${commentList.number+1}|}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-chevron-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${!commentList.hasNext()} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${commentList.totalPages-1}|}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-chevron-bar-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M4.146 3.646a.5.5 0 0 0 0 .708L7.793 8l-3.647 3.646a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708 0zM11.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5z"/>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
 <script layout:fragment="script">
-    const delBtn = document.querySelector(".delBtn");
-    delBtn.addEventListener('click', function() {
-    if(confirm("정말 삭제하시겠습니까?")) location.href = this.dataset.uri;
-});
+    const delBtn = document.querySelectorAll(".delBtn");
+    Array.from(delBtn).forEach(function(element) {
+        element.addEventListener('click', function() {
+        if(confirm("정말 삭제하시겠습니까?")) location.href = this.dataset.uri;
+        });
+    });
 </script>
 </html>
