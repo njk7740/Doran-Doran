@@ -216,3 +216,21 @@ a {
 .user_info_list > li {
     font-size:15px;
 }
+
+.user_info_table th {
+    text-align:start;
+    width:10%;
+}
+
+.post_list_form {
+    border:5px double #cce5ff;
+    background:white;
+    border-radius:30px;
+}
+
+.search_and_create {
+    border:2px dashed #CFE4EF;
+    background:#BECADE;
+    padding:10px;
+    border-radius:10px;
+}

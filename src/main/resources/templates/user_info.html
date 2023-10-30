@@ -1,11 +1,28 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container">
-    <div class="card mb-3" style="width:500px;">
-        <div class="card-body" style="height:400px;">
-            <img th:src="@{/default-profile.png}" style="width:200px;">
-            <h5 class="card-title my-3" th:text="${user.nickname}"></h5>
-            <p class="card-text">백엔드 개발자</p>
-            <p class="card-text">대한민국 대전시</p>
+<div layout:fragment="content" class="container user_info_page">
+    <div class="d-flex justify-content-between">
+        <div class="card mb-3" style="width:38%;">
+            <div class="card-body" style="height:400px;">
+                <img th:src="@{/default-profile.png}" style="width:200px;">
+                <h5 class="card-title my-3" th:text="${user.nickname}"></h5>
+                <p class="card-text">백엔드 개발자</p>
+                <p class="card-text">대한민국 대전시</p>
+            </div>
+
+        </div>
+        <div class="card" style="width:60%">
+            <div class="card-body">
+                <table class="table user_info_table">
+                    <tr>
+                        <th>이름</th>
+                        <td>남재경</td>
+                    </tr>
+                    <tr>
+                        <th>나이</th>
+                        <td>30</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>
