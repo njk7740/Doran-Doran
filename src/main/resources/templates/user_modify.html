@@ -3,28 +3,39 @@
     <div class="d-flex justify-content-between">
         <div th:replace="~{user_info_side :: userSide}"></div>
         <div style="width:60%">
-            <div class="card content" style="height:500px;">
+            <form th:action="@{/user/info/modify}" method="post" th:object="${userModifyForm}">
+            <div class="card content" style="height:550px;">
                 <div class="card-body">
                     <table class="table user_info_table">
                         <tr>
                             <th>이름</th>
-                            <td th:text="${user.rName}"></td>
+                            <td>
+                                <input type="text" th:field="*{rName}" class="form-control">
+                            </td>
                         </tr>
                         <tr>
                             <th>나이</th>
-                            <td th:text="${user.age}"></td>
+                            <td>
+                                <input type="number" th:field="*{age}" class="form-control">
+                            </td>
                         </tr>
                         <tr>
                             <th>주소</th>
-                            <td th:text="${user.address}"></td>
+                            <td>
+                                <input type="text" th:field="*{address}" class="form-control">
+                            </td>
                         </tr>
                         <tr>
                             <th>직업</th>
-                            <td th:text="${user.job}"></td>
+                            <td>
+                                <input type="text" th:field="*{job}" class="form-control">
+                            </td>
                         </tr>
                         <tr>
                             <th>휴대폰 번호</th>
-                            <td th:text="${user.pNum}"></td>
+                            <td>
+                                <input type="text" th:field="*{pNum}" class="form-control">
+                            </td>
                         </tr>
                         <tr>
                             <th>이메일</th>
@@ -36,14 +47,15 @@
                         </tr>
                     </table>
                     <div class="d-flex text-start">
-                        <span class="ms-2 me-5" style="font-weight:bold;">자기소개</span>
-                        <p style="white-space:pre-line;" th:text="${user.intro}"></p>
+                        <span class="ms-2 me-5" style="font-weight:bold;width:100px;">자기소개</span>
+                        <textarea th:field="*{intro}"rows="5" class="form-control"></textarea>
                     </div>
                 </div>
             </div>
             <div class="my-3">
-                <a th:href="@{/user/info/modify}" class="btn btn-primary">회원정보 수정</a>
+                <button type="submit" class="btn btn-primary">수정 완료</button>
             </div>
+            </form>
         </div>
     </div>
 </div>

@@ -22,4 +22,10 @@ public class UserCreateForm {
     @Email
     @NotEmpty(message = "이메일을 입력해주세요")
     private String email;
+    private String rName;
+    private Integer age;
+    private String pNum;
+    private String intro;
+    private String address;
+    private String job;
 }

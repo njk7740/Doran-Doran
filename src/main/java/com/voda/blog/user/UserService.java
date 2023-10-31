@@ -20,13 +20,29 @@ public class UserService {
         throw new RuntimeException("유저 찾기 실패");
     }
 
-    public void create(String username, String password, String email, String nickname) {
+    public void create(UserCreateForm userCreateForm) {
         SiteUser user = new SiteUser();
-        user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setEmail(email);
-        user.setNickname(nickname);
+        user.setUsername(userCreateForm.getUsername());
+        user.setPassword(passwordEncoder.encode(userCreateForm.getPassword1()));
+        user.setEmail(userCreateForm.getEmail());
+        user.setNickname(userCreateForm.getNickname());
         user.setCreateDate(LocalDateTime.now());
+        user.setAge(userCreateForm.getAge());
+        user.setRName(userCreateForm.getRName());
+        user.setPNum(userCreateForm.getPNum());
+        user.setIntro(userCreateForm.getIntro());
+        user.setAddress(userCreateForm.getAddress());
+        user.setJob(userCreateForm.getJob());
+        userRepository.save(user);
+    }
+
+    public void modify(SiteUser user, UserModifyForm userModifyForm) {
+        user.setRName(userModifyForm.getRName());
+        user.setJob(userModifyForm.getJob());
+        user.setPNum(userModifyForm.getPNum());
+        user.setAge(userModifyForm.getAge());
+        user.setIntro(userModifyForm.getIntro());
+        user.setAddress(userModifyForm.getAddress());
         userRepository.save(user);
     }
 

@@ -15,4 +15,12 @@
         </form>
     </div>
 </div>
+<script layout:fragment="script">
+    const editor = new toastui.Editor({
+            el: document.querySelector('#editor'),
+            previewStyle: 'tab',
+            height: '500px',
+            initialValue: '내용을 입력해주세요'
+        });
+</script>
 </html>

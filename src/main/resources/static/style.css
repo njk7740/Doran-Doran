@@ -82,7 +82,6 @@ a {
 }
 
 .userForm {
-    width:500px;
     margin:10px auto;
 }
 
@@ -195,7 +194,7 @@ a {
 }
 
 .side-menu > div {
-    margin:100px 0;
+    margin:50px 0;
 }
 
 .side-menu a {
@@ -219,7 +218,7 @@ a {
 
 .user_info_table th {
     text-align:start;
-    width:10%;
+    width:20%;
 }
 
 .post_list_form {
@@ -233,4 +232,18 @@ a {
     background:#BECADE;
     padding:10px;
     border-radius:10px;
+}
+
+.content {
+    box-shadow:2px 2px gray;
+    width:100%;
+    overflow:hidden;
+}
+
+.myPostPage {
+    background:white;
+    padding:0 30px;
+    border:1px solid #ccf;
+    border-radius:30px;
+    box-shadow:3px 3px gray;
 }

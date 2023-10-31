@@ -1,0 +1,25 @@
+<div th:fragment="userSide" style="width:38%">
+    <div class="card mb-3 content">
+        <div class="card-body" style="height:400px;">
+            <img th:src="@{/default-profile.png}" style="width:200px;">
+            <h5 class="card-title my-3" th:text="${user.nickname}"></h5>
+            <p class="card-text" th:text="${user.job}"></p>
+            <p class="card-text text-secondary" th:text="${user.address}"></p>
+        </div>
+    </div>
+    <div class="card content">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <a class="btn btn-outline-primary" th:href="@{/user/info}">메인 정보</a>
+            </li>
+            <li class="list-group-item">
+                <span>내가 쓴 게시물</span>
+                <a class="badge bg-dark" th:href="@{/user/info/myPost}" th:text="${#lists.size(user.postList)}"></a>
+            </li>
+            <li class="list-group-item">
+                <span>좋아한 게시물</span>
+                <a class="badge bg-dark" th:href="@{/user/info/likePost}" th:text="${#lists.size(user.likePost)}"></a>
+            </li>
+        </ul>
+    </div>
+</div>

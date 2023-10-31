@@ -33,16 +33,6 @@
                                 <img th:src="@{/default-profile.png}" style="width:100px;">
                                 <h5 class="card-title text-dark mt-3 mb-0" th:text="${user.nickname}"></h5>
                             </div>
-                            <ul class="user_info_list list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <span>작성한 포스트 </span>
-                                    <a th:href="@{/user/info/post}" th:text="${#lists.size(user.postList)}"></a>
-                                </li>
-                                <li class="list-group-item">
-                                    <span>좋아한 포스트 </span>
-                                    <a th:href="@{/user/info/like}" th:text="${#lists.size(user.likePost)}"></a>
-                                </li>
-                            </ul>
                             <div class="card-body" style="height:60px;">
                                 <a th:href="@{/user/info}" class="card-link ch_myInfo">내 정보</a>
                                 <a th:href="@{/user/logout}" class="logout_link card-link" style="color:red;"

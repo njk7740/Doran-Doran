@@ -47,6 +47,13 @@ public class PostService {
         return postRepository.findBySubjectLike("%" + kw + "%" , pageable);
     }
 
+    public Page<Post> getByAuthor(int page, SiteUser user) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page, 5, Sort.by(sorts));
+        return postRepository.findByAuthor(pageable, user);
+    }
+
     public Post getById(Integer id) {
         Optional<Post> post = postRepository.findById(id);
         if (post.isPresent()) return post.get();

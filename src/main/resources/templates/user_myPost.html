@@ -1,0 +1,74 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container user_info_page my-3">
+    <div class="d-flex justify-content-between">
+        <div th:replace="~{user_info_side :: userSide}"></div>
+        <div style="width:60%;">
+            <div class="myPostPage">
+                <div th:if="${postList.isEmpty()}" class="none-post w-100">포스트가 없습니다</div>
+                <a class="card post-card my-5" style="width:100%;" th:each="post : ${postList}"
+                   th:href="@{|/post/detail/${post.id}|}">
+                    <div class="card-body position-relative">
+                    <span class="position-absolute top-0 translate-middle badge rounded-pill text-dark d-flex align-items-center"
+                          style="background:#CCFFFF;z-index:1;right:0%;">
+                        <img th:src="@{/heart.png}" style="width:15px;">
+                        <span th:text="|+${#lists.size(post.liker)}|" style="font-size:15px"></span>
+                        <img class="ms-2" th:src="@{/comment.png}" style="width:15px;">
+                        <span th:text="|+${#lists.size(post.commentList)}|" style="font-size:15px"></span>
+                    </span>
+                        <h5 class="card-title" th:text="${post.subject}"></h5>
+                        <p class="card-text" th:text="${post.content}"></p>
+                    </div>
+                    <div class="card-footer text-body-secondary d-flex justify-content-between">
+                        <span th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+                        <span th:text="${post.author.nickname}"></span>
+                    </div>
+                </a>
+                <!--페이징-->
+                <ul class="pagination justify-content-center my-5" th:if="${!postList.isEmpty()}">
+                    <li class="page-item" th:classappend="${!postList.hasPrevious()} ? 'disabled'">
+                        <a class="page-link" th:href="@{?page=0}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-chevron-bar-left" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M11.854 3.646a.5.5 0 0 1 0 .708L8.207 8l3.647 3.646a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708 0zM4.5 1a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 1 0v-13a.5.5 0 0 0-.5-.5z"/>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="page-item" th:classappend="${!postList.hasPrevious()} ? 'disabled'">
+                        <a class="page-link" th:href="@{|?page=${postList.number-1}|}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-chevron-left" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="page-item" th:each="page : ${#numbers.sequence(0, postList.totalPages-1)}"
+                        th:classappend="${postList.number == page} ? 'active'"
+                        th:if="${page >= postList.number-2 && page <= postList.number+2}">
+                        <a class="page-link" th:href="@{|?page=${page}|}" th:text="${page}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${!postList.hasNext()} ? 'disabled'">
+                        <a class="page-link" th:href="@{|?page=${postList.number+1}|}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-chevron-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="page-item" th:classappend="${!postList.hasNext()} ? 'disabled'">
+                        <a class="page-link" th:href="@{|?page=${postList.totalPages-1}|}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-chevron-bar-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M4.146 3.646a.5.5 0 0 0 0 .708L7.793 8l-3.647 3.646a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708 0zM11.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

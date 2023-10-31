@@ -23,6 +23,14 @@ public class SiteUser {
     @Column(length = 10, unique = true)
     private String nickname;
     private String email;
+    @Column(length = 5)
+    private String rName;
+    private Integer age;
+    private String pNum;
+    @Column(columnDefinition = "TEXT")
+    private String intro;
+    private String address;
+    private String job;
     private LocalDateTime createDate;
     @OneToMany(mappedBy = "author")
     private List<Post> postList;

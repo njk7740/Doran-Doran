@@ -1,0 +1,30 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container user_info_page my-3">
+    <div class="d-flex justify-content-between">
+        <div th:replace="~{user_info_side :: userSide}"></div>
+        <div style="width:60%;">
+            <div class="myPostPage">
+                <div th:if="${user.likePost.isEmpty()}" class="none-post w-100">포스트가 없습니다</div>
+                <a class="card post-card my-5" style="width:100%;" th:each="post : ${user.likePost}"
+                   th:href="@{|/post/detail/${post.id}|}">
+                    <div class="card-body position-relative">
+                    <span class="position-absolute top-0 translate-middle badge rounded-pill text-dark d-flex align-items-center"
+                          style="background:#CCFFFF;z-index:1;right:0%;">
+                        <img th:src="@{/heart.png}" style="width:15px;">
+                        <span th:text="|+${#lists.size(post.liker)}|" style="font-size:15px"></span>
+                        <img class="ms-2" th:src="@{/comment.png}" style="width:15px;">
+                        <span th:text="|+${#lists.size(post.commentList)}|" style="font-size:15px"></span>
+                    </span>
+                        <h5 class="card-title" th:text="${post.subject}"></h5>
+                        <p class="card-text" th:text="${post.content}"></p>
+                    </div>
+                    <div class="card-footer text-body-secondary d-flex justify-content-between">
+                        <span th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+                        <span th:text="${post.author.nickname}"></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

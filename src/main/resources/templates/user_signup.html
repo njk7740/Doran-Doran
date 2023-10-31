@@ -4,12 +4,33 @@
         <h2>회원가입</h2>
         <form th:action="@{/user/signup}" method="post" th:object="${userCreateForm}">
             <div th:replace="~{form_errors :: error}"></div>
-            <input type="text" class="form-control" th:field="*{username}" placeholder="유저ID">
-            <input type="password" class="form-control" th:field="*{password1}" placeholder="비밀번호">
-            <input type="password" class="form-control" th:field="*{password2}" placeholder="비밀번호 확인">
-            <input type="text" class="form-control" th:field="*{nickname}" placeholder="닉네임">
-            <input type="email" class="form-control" th:field="*{email}" placeholder="이메일">
-            <button type="submit" class="btn-signup">회원가입</button>
+            <div class="d-flex justify-content-center">
+                <div class="mx-2">
+                    <div class="card" style="height:300px; width:400px;">
+                        <div class="card-body">
+                            <h5 class="card-title">필수항목</h5>
+                            <input type="text" class="form-control" th:field="*{username}" placeholder="유저ID">
+                            <input type="password" class="form-control" th:field="*{password1}" placeholder="비밀번호">
+                            <input type="password" class="form-control" th:field="*{password2}" placeholder="비밀번호 확인">
+                            <input type="text" class="form-control" th:field="*{nickname}" placeholder="닉네임">
+                            <input type="email" class="form-control" th:field="*{email}" placeholder="이메일">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-signup mt-3" style="width:300px;">회원가입</button>
+                </div>
+                <div class="card mx-2" style="height:480px; width:400px;">
+                    <div class="card-body">
+                        <h5 class="card-title">선택항목</h5>
+                        <input type="text" class="form-control" th:field="*{rName}" placeholder="성함">
+                        <input type="number" class="form-control" th:field="*{age}" placeholder="나이">
+                        <input type="text" class="form-control" th:field="*{pNum}" placeholder="휴대폰 번호">
+                        <input type="text" class="form-control" th:field="*{address}" placeholder="주소">
+                        <input type="text" class="form-control" th:field="*{job}" placeholder="직업">
+                        <textarea class="form-control my-3" style="overflow:scroll;" th:field="*{intro}" rows="5"
+                                  placeholder="자기소개"></textarea>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 </div>
