@@ -33,6 +33,7 @@ public class UserService {
         user.setIntro(userCreateForm.getIntro());
         user.setAddress(userCreateForm.getAddress());
         user.setJob(userCreateForm.getJob());
+        user.setPicture("/default-profile.png");
         userRepository.save(user);
     }
 
@@ -53,6 +54,11 @@ public class UserService {
 
     public void unlike(SiteUser user, Post post) {
         user.getLikePost().remove(post);
+        userRepository.save(user);
+    }
+
+    public void modifyPicture(SiteUser user, String path) {
+        user.setPicture(path);
         userRepository.save(user);
     }
 }

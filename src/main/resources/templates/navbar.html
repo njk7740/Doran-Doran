@@ -30,7 +30,7 @@
                     <li class="nav-item">
                         <div class="card ms-5" style="width:18rem;">
                             <div class="card-body">
-                                <img th:src="@{/default-profile.png}" style="width:100px;">
+                                <img th:src="@{${user.picture}}" style="width:130px; height:130px; border-radius:10px;">
                                 <h5 class="card-title text-dark mt-3 mb-0" th:text="${user.nickname}"></h5>
                             </div>
                             <div class="card-body" style="height:60px;">

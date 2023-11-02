@@ -1,7 +1,8 @@
 <div th:fragment="userSide" style="width:38%">
     <div class="card mb-3 content">
         <div class="card-body" style="height:400px;">
-            <img th:src="@{/default-profile.png}" style="width:200px;">
+            <div class="text-end"><a th:href="@{/user/info/modifyPicture}" class="badge bg-primary text-light">사진 변경</a></div>
+            <img th:src="@{${user.picture}}" style="width:200px;height:200px;border-radius:20px;">
             <h5 class="card-title my-3" th:text="${user.nickname}"></h5>
             <p class="card-text" th:text="${user.job}"></p>
             <p class="card-text text-secondary" th:text="${user.address}"></p>

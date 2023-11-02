@@ -34,7 +34,7 @@
                         <span th:text="|+${#lists.size(post.commentList)}|" style="font-size:15px"></span>
                     </span>
                         <h5 class="card-title" th:text="${post.subject}"></h5>
-                        <p class="card-text" th:text="${post.content}"></p>
+                        <p class="card-text" th:utext="${@commonUtil.clean(post.content)}"></p>
                     </div>
                     <div class="card-footer text-body-secondary d-flex justify-content-between">
                         <span th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}"></span>

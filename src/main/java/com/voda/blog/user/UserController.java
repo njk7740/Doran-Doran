@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 
 @Controller
@@ -31,12 +34,13 @@ public class UserController {
 
     @PostMapping("/signup")
     public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) return "user_signup";
-        if(!userCreateForm.getPassword1().equals(userCreateForm.getPassword2())) {
+        if (bindingResult.hasErrors()) return "user_signup";
+        if (!userCreateForm.getPassword1().equals(userCreateForm.getPassword2())) {
             bindingResult.rejectValue("password2", "passwordIncorrect",
                     "비밀번호와 확인이 일치하지 않습니다");
             return "user_signup";
-        } try {
+        }
+        try {
             userService.create(userCreateForm);
         } catch (DataIntegrityViolationException e) {
             bindingResult.reject("userIncorrect", "아이디 또는 닉네임이 중복입니다");
@@ -95,6 +99,40 @@ public class UserController {
         SiteUser user = userService.getByUsername(principal.getName());
         model.addAttribute("user", user);
         userService.modify(user, userModifyForm);
+        return "redirect:/user/info";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/info/modifyPicture")
+    public String modifyPicture(Model model, Principal principal) {
+        SiteUser user = userService.getByUsername(principal.getName());
+        model.addAttribute("user", user);
+        return "user_modifyPicture";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/info/modifyPicture")
+    public String modifyPicture(Model model, Principal principal, @RequestParam(value = "file") MultipartFile file) {
+        SiteUser user = userService.getByUsername(principal.getName());
+        model.addAttribute("user", user);
+        String filePath;
+        if (file.isEmpty()) userService.modifyPicture(user, "/default-profile.png");
+        else {
+            String originalFilename = file.getOriginalFilename();
+            int idx = originalFilename.lastIndexOf(".");
+            String ext = originalFilename.substring(idx);
+            String dirPath = "src/main/resources/static/" + user.getUsername();
+            File dir = new File(dirPath);
+            if (!dir.exists()) dir.mkdirs();
+            filePath = dir.getAbsolutePath() + "/profile" + ext;
+            try {
+                file.transferTo(new File(filePath));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            userService.modifyPicture(user, String.format("/%s/profile%s", user.getUsername(), ext));
+        }
+
         return "redirect:/user/info";
     }
 }

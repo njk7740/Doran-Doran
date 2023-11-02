@@ -17,7 +17,7 @@ public class SiteUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 20, unique = true)
+    @Column(length = 30, unique = true)
     private String username;
     private String password;
     @Column(length = 10, unique = true)
@@ -38,4 +38,21 @@ public class SiteUser {
     private Set<Post> likePost;
     @OneToMany(mappedBy = "author")
     private List<Comment> commentList;
+    private String picture;
+
+    public SiteUser(String key, String name, String email, String picture, LocalDateTime time) {
+        this.nickname = name;
+        this.username = key;
+        this.email = email;
+        this.picture = picture;
+        this.createDate = time;
+    }
+
+    public SiteUser() {}
+    public SiteUser update(String name, String picture) {
+        this.nickname = name;
+        this.picture = picture;
+
+        return this;
+    }
 }

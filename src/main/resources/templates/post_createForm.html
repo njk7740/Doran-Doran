@@ -1,26 +1,38 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3">
+<div layout:fragment="content" class="my-3 container-fluid">
     <div>
-        <form method="post" th:object="${postForm}">
+        <input class="title form-control border-0 mb-3" style="font-size:3rem;" th:value="${subject}"
+               placeholder="제목을 입력해주세요" type="text">
+        <div id="editor"></div>
+        <div class="d-flex justify-content-between align-items-start my-2">
+            <a th:href="@{/post/list}" class="btn btn-outline-secondary">뒤로가기</a>
+            <button type="button" class="postCreateBtn btn btn-outline-primary btn-lg" onclick="submit()">등록</button>
+        </div>
+        <form method="post" id="postForm">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            <div th:replace="~{form_errors :: error}"></div>
-            <input class="form-control border-0 mb-3" style="font-size:3rem;" placeholder="제목을 입력해주세요" type="text"
-                   th:field="*{subject}">
-            <textarea class="form-control border-0" style="font-size:1.2rem;overflow:scroll;" placeholder="내용을 입력해주세요"
-                      th:field="*{content}" rows="20"></textarea>
-            <div class="d-flex justify-content-between align-items-start my-2">
-                <a th:href="@{/post/list}" class="btn btn-outline-secondary">뒤로가기</a>
-                <button type="submit" class="btn btn-outline-primary btn-lg">등록</button>
-            </div>
+            <input type="hidden" id="subject" name="subject">
+            <input type="hidden" id="content" name="content" th:value="${content}">
         </form>
     </div>
 </div>
 <script layout:fragment="script">
     const editor = new toastui.Editor({
-            el: document.querySelector('#editor'),
-            previewStyle: 'tab',
-            height: '500px',
-            initialValue: '내용을 입력해주세요'
-        });
+        el: document.querySelector('#editor'),
+        previewStyle: 'vertical',
+        height: '700px',
+        initialValue: document.querySelector("#content").value,
+        initialEditType: 'wysiwyg',
+        hideModeSwitch: true,
+
+    });
+
+    function submit() {
+        document.querySelector("#subject").value = document.querySelector(".title").value;
+        document.querySelector("#content").value = editor.getHTML();
+        if (document.querySelector("#subject").value == "") alert("제목을 입력해주세요");
+        else if (document.querySelector("#content").value == "") alert("내용을 입력해주세요");
+        else document.querySelector("#postForm").submit();
+    }
+
 </script>
 </html>

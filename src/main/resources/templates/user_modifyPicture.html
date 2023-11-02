@@ -1,0 +1,17 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container user_info_page my-3">
+    <div class="d-flex justify-content-between">
+        <div th:replace="~{user_info_side :: userSide}"></div>
+        <div style="width:60%">
+            <div class="card content" style="height:80px;">
+                <div class="card-body">
+                    <form th:action="@{/user/info/modifyPicture}" class="input-group" method="post" enctype="multipart/form-data">
+                        <input type="file" class="form-control" id="file" name="file" accept="image/*">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

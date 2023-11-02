@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 
 @Controller
@@ -35,18 +34,17 @@ public class PostController {
 
     @GetMapping("/create")
     @PreAuthorize("isAuthenticated()")
-    public String create(PostForm postForm, Model model, Principal principal) {
+    public String create( Model model, Principal principal) {
         if (principal != null) model.addAttribute("user", userService.getByUsername(principal.getName()));
         return "post_createForm";
     }
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
-    public String create(@Valid PostForm postForm, BindingResult bindingResult, Model model, Principal principal) {
+    public String create(Model model, Principal principal, String subject, String content) {
         if (principal != null) model.addAttribute("user", userService.getByUsername(principal.getName()));
-        if (bindingResult.hasErrors()) return "post_createForm";
         SiteUser user = userService.getByUsername(principal.getName());
-        postService.create(postForm.getSubject(), postForm.getContent(), user);
+        postService.create(subject, content, user);
         return "redirect:/";
     }
 
@@ -70,8 +68,8 @@ public class PostController {
         if (principal != null) model.addAttribute("user", userService.getByUsername(principal.getName()));
         Post post = postService.getById(id);
         if (!post.getAuthor().getUsername().equals(principal.getName())) throw new RuntimeException("권한이 없습니다");
-        postForm.setSubject(post.getSubject());
-        postForm.setContent(post.getContent());
+        model.addAttribute("subject", post.getSubject());
+        model.addAttribute("content", post.getContent());
         return "post_createForm";
     }
 
@@ -90,7 +88,9 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     public String delete(@PathVariable("id") Integer id, Principal principal) {
         Post post = postService.getById(id);
+        SiteUser user = userService.getByUsername(principal.getName());
         if (!post.getAuthor().getUsername().equals(principal.getName())) throw new RuntimeException("권한이 없습니다");
+        userService.unlike(user, post);
         postService.delete(post);
         return "redirect:/";
     }

@@ -67,6 +67,7 @@ public class PostService {
     }
 
     public void delete(Post post) {
+        post.getLiker().clear();
         postRepository.delete(post);
     }
 

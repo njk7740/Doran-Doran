@@ -10,6 +10,13 @@
             <input type="password" class="form-control" name="password" placeholder="비밀번호">
             <button type="submit" class="btn-signup">로그인</button>
         </form>
+        <div class="card mx-auto mt-5">
+            <div class="card-body">
+                <div><a th:href="@{http://localhost:8080/oauth2/authorization/google}" class="btn btn-primary w-100 mb-3">구글 로그인</a></div>
+                <div><a th:href="@{http://localhost:8080/oauth2/authorization/naver}" class="btn btn-primary w-100 mb-3">네이버 로그인</a></div>
+                <div><a th:href="@{http://localhost:8080/oauth2/authorization/kakao}" class="btn btn-primary w-100 mb-3">카카오 로그인</a></div>
+            </div>
+        </div>
     </div>
 </div>
 </html>

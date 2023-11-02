@@ -117,11 +117,11 @@ a {
 }
 
 .navbar-toggler {
-    border-radius:50px;
+    border-radius:10px;
     font-weight:bolder;
     box-shadow:3px 3px;
     padding:10px 20px;
-    background:#7DD4FF;
+    background:#CCE5FF;
     transition:0.3s;
 }
 
@@ -152,7 +152,7 @@ a {
 }
 
 
-.detail-form h1 {
+.detail-form #subject {
     background:#D8DEF0;
     margin-bottom:0;
     margin-top:30px;
