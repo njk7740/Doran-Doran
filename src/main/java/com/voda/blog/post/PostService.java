@@ -1,6 +1,7 @@
 package com.voda.blog.post;
 
 import com.voda.blog.user.SiteUser;
+import com.voda.blog.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final UserService userService;
 
     public void create(String subject, String content, SiteUser user) {
         Post post = new Post();
@@ -67,6 +69,7 @@ public class PostService {
     }
 
     public void delete(Post post) {
+        for(SiteUser user : post.getLiker()) userService.unlike(user, post);
         post.getLiker().clear();
         postRepository.delete(post);
     }

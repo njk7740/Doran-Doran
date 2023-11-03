@@ -17,10 +17,10 @@ public class SiteUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 30, unique = true)
+    @Column(unique = true)
     private String username;
     private String password;
-    @Column(length = 10, unique = true)
+    @Column(length = 10)
     private String nickname;
     private String email;
     @Column(length = 5)
@@ -44,7 +44,7 @@ public class SiteUser {
         this.nickname = name;
         this.username = key;
         this.email = email;
-        this.picture = picture;
+        this.picture = (picture == null) ? "/default-profile.png" : picture;
         this.createDate = time;
     }
 

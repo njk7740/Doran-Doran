@@ -27,14 +27,16 @@ public class PostController {
                        @RequestParam(value = "order", defaultValue = "liker") String order) {
         model.addAttribute("paging", postService.getList(page, kw, order));
         model.addAttribute("kw", kw);
-        if (principal != null) model.addAttribute("user", userService.getByUsername(principal.getName()));
+        if (principal != null) {
+            model.addAttribute("user", userService.getByUsername(principal.getName()));
+        }
         model.addAttribute("order", order);
         return "post_list";
     }
 
     @GetMapping("/create")
     @PreAuthorize("isAuthenticated()")
-    public String create( Model model, Principal principal) {
+    public String create(Model model, Principal principal) {
         if (principal != null) model.addAttribute("user", userService.getByUsername(principal.getName()));
         return "post_createForm";
     }
