@@ -4,8 +4,8 @@
         <div th:replace="~{user_info_side :: userSide}"></div>
         <div style="width:60%;">
             <div class="myPostPage">
-                <div th:if="${user.likePost.isEmpty()}" class="none-post w-100">포스트가 없습니다</div>
-                <a class="card post-card my-5" style="width:100%;" th:each="post : ${user.likePost}"
+                <div th:if="${target.likePost.isEmpty()}" class="none-post w-100">포스트가 없습니다</div>
+                <a class="card post-card my-5" style="width:100%;" th:each="post : ${target.likePost}"
                    th:href="@{|/post/detail/${post.id}|}">
                     <div class="card-body position-relative">
                     <span class="position-absolute top-0 translate-middle badge rounded-pill text-dark d-flex align-items-center"

@@ -1,28 +1,33 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container">
     <div class="d-flex justify-content-between">
-        <div class="post_list_form p-3" style="height:350px;">
-            <div>
-                <div id="searchForm" class="input-group my-2">
-                    <input type="text" placeholder="제목 검색" class="form-control" onkeydown="enterkey();">
-                    <button type="submit" class="btn btn-primary">검색</button>
+        <div>
+            <div class="post_list_form p-3" style="height:350px;">
+                <div>
+                    <div id="searchForm" class="input-group my-2">
+                        <input type="text" placeholder="제목 검색" class="form-control" onkeydown="enterkey();">
+                        <button type="submit" class="btn btn-primary">검색</button>
+                    </div>
+                    <a class="createPostBtn nav-link btn btn-primary my-3" aria-current="page"
+                       th:href="@{/post/create}">블로그 작성</a>
                 </div>
-                <a class="createPostBtn nav-link btn btn-primary my-3" aria-current="page" th:href="@{/post/create}">블로그
-                    작성</a>
+                <div class="side-menu text-end">
+                    <div><a href="javascript:void(0);" class="order_liker"
+                            th:classappend="${order == 'liker'} ? 'side-active'">추천순</a></div>
+                    <div><a href="javascript:void(0);" class="order_recent"
+                            th:classappend="${order == 'recent'} ? 'side-active'">최신순</a></div>
+                </div>
             </div>
-            <div class="side-menu text-end">
-                <div><a href="javascript:void(0);" class="order_liker"
-                        th:classappend="${order == 'liker'} ? 'side-active'">추천순</a></div>
-                <div><a href="javascript:void(0);" class="order_recent"
-                        th:classappend="${order == 'recent'} ? 'side-active'">최신순</a></div>
+            <div class="post_list_form my-3 p-3" style="height:100px;">
+
             </div>
         </div>
         <!--블로그 리스트 출력-->
         <div class="ms-5 mx-auto">
-            <div th:if="${paging.totalElements == 0}" class="none-post">
-                <div>게시물이 없습니다</div>
-            </div>
             <div class="post_list_form row">
+                <div th:if="${paging.totalElements == 0}" class="none-post">
+                    <div>게시물이 없습니다</div>
+                </div>
                 <a class="card post-card mx-auto my-3" th:each="post : ${paging}"
                    th:href="@{|/post/detail/${post.id}|}">
                     <div class="card-body position-relative">

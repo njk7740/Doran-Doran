@@ -61,4 +61,14 @@ public class UserService {
         user.setPicture(path);
         userRepository.save(user);
     }
+
+    public void favorite(SiteUser user, String username) {
+        user.getFavorite().add(username);
+        userRepository.save(user);
+    }
+
+    public void unfavor(SiteUser user, String username) {
+        user.getFavorite().remove(username);
+        userRepository.save(user);
+    }
 }

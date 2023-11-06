@@ -10,10 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -54,28 +51,33 @@ public class UserController {
         return "user_login";
     }
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/info")
-    public String info(Model model, Principal principal) {
-        model.addAttribute("user", userService.getByUsername(principal.getName()));
-        return "user_info";
+    public String Info(Principal principal) {
+        return String.format("redirect:/user/info/%s", principal.getName());
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/info/myPost")
-    public String myPost(Model model, Principal principal, @RequestParam(value = "page", defaultValue = "0") int page) {
-        SiteUser user = userService.getByUsername(principal.getName());
+    @GetMapping("/{username}/writePost")
+    public String writePost(Model model, @PathVariable(value = "username") String username, @RequestParam(value = "page",
+            defaultValue = "0") int page, Principal principal) {
+        SiteUser user = userService.getByUsername(username);
         Page<Post> postList = postService.getByAuthor(page, user);
-        model.addAttribute("user", user);
+        model.addAttribute("target", user);
         model.addAttribute("postList", postList);
+        if (principal != null) {
+            model.addAttribute("own", username.equals(principal.getName()));
+            model.addAttribute("user", userService.getByUsername(principal.getName()));
+        } else model.addAttribute("own", false);
         return "user_myPost";
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/info/likePost")
-    public String myPost(Model model, Principal principal) {
-        SiteUser user = userService.getByUsername(principal.getName());
-        model.addAttribute("user", user);
+    @GetMapping("/{username}/likePost")
+    public String likePost(Model model, @PathVariable(value = "username") String username, Principal principal) {
+        SiteUser user = userService.getByUsername(username);
+        model.addAttribute("target", user);
+        if (principal != null) {
+            model.addAttribute("own", username.equals(principal.getName()));
+            model.addAttribute("user", userService.getByUsername(principal.getName()));
+        } else model.addAttribute("own", false);
         return "user_likePost";
     }
 
@@ -134,5 +136,34 @@ public class UserController {
         }
 
         return "redirect:/user/info";
+    }
+
+    @GetMapping("/info/{username}")
+    public String info(Model model, @PathVariable(value = "username") String username, Principal principal) {
+        SiteUser target = userService.getByUsername(username);
+        model.addAttribute("target", target);
+        if (principal != null) {
+            SiteUser user = userService.getByUsername(principal.getName());
+            model.addAttribute("own", username.equals(principal.getName()));
+            model.addAttribute("user", user);
+            model.addAttribute("favorite", user.getFavorite().contains(target.getUsername()));
+        } else model.addAttribute("own", false);
+        return "user_info";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/favorite/{username}")
+    public String favorite(@PathVariable(value = "username") String username, Principal principal) {
+        SiteUser user = userService.getByUsername(principal.getName());
+        userService.favorite(user, username);
+        return String.format("redirect:/user/info/%s", username);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/unfavor/{username}")
+    public String unfavor(@PathVariable(value = "username") String username, Principal principal) {
+        SiteUser user = userService.getByUsername(principal.getName());
+        userService.unfavor(user, username);
+        return String.format("redirect:/user/info/%s", username);
     }
 }

@@ -8,40 +8,40 @@
                     <table class="table user_info_table">
                         <tr>
                             <th>이름</th>
-                            <td th:text="${user.rName}"></td>
+                            <td th:text="${target.rName}"></td>
                         </tr>
                         <tr>
                             <th>나이</th>
-                            <td th:text="${user.age}"></td>
+                            <td th:text="${target.age}"></td>
                         </tr>
                         <tr>
                             <th>주소</th>
-                            <td th:text="${user.address}"></td>
+                            <td th:text="${target.address}"></td>
                         </tr>
                         <tr>
                             <th>직업</th>
-                            <td th:text="${user.job}"></td>
+                            <td th:text="${target.job}"></td>
                         </tr>
                         <tr>
                             <th>휴대폰 번호</th>
-                            <td th:text="${user.pNum}"></td>
+                            <td th:text="${target.pNum}"></td>
                         </tr>
                         <tr>
                             <th>이메일</th>
-                            <td th:text="${user.email}"></td>
+                            <td th:text="${target.email}"></td>
                         </tr>
                         <tr>
                             <th>가입일</th>
-                            <td th:text="${#temporals.format(user.createDate, 'yyyy년 MM월 dd일')}"></td>
+                            <td th:text="${#temporals.format(target.createDate, 'yyyy년 MM월 dd일')}"></td>
                         </tr>
                     </table>
                     <div class="d-flex text-start">
                         <span class="ms-2 me-5" style="font-weight:bold;">자기소개</span>
-                        <p style="white-space:pre-line;" th:text="${user.intro}"></p>
+                        <p style="white-space:pre-line;" th:text="${target.intro}"></p>
                     </div>
                 </div>
             </div>
-            <div class="my-3">
+            <div class="my-3" th:if="${own}">
                 <a th:href="@{/user/info/modify}" class="btn btn-primary">회원정보 수정</a>
             </div>
         </div>

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -39,6 +40,7 @@ public class SiteUser {
     @OneToMany(mappedBy = "author")
     private List<Comment> commentList;
     private String picture;
+    private Set<String> favorite;
 
     public SiteUser(String key, String name, String email, String picture, LocalDateTime time) {
         this.nickname = name;
@@ -46,9 +48,12 @@ public class SiteUser {
         this.email = email;
         this.picture = (picture == null) ? "/default-profile.png" : picture;
         this.createDate = time;
+        favorite = new HashSet<>();
     }
 
-    public SiteUser() {}
+    public SiteUser() {
+        favorite = new HashSet<>();
+    }
     public SiteUser update(String name, String picture) {
         this.nickname = name;
         this.picture = picture;

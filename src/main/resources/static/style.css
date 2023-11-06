@@ -198,18 +198,15 @@ a {
 }
 
 .side-menu a {
+    color:#00aaff;
     font-size:30px;
-    padding:10px 20px;
+    padding:5px 10px;
 }
 
 .side-active {
-    background:#0080FF;
-    color:white;
-    border-radius:30px;
-}
-
-.side-active:hover {
-    color:#9CF;
+    border:5px solid;
+    font-weight:bold;
+    border-radius:20px;
 }
 
 .user_info_list > li {

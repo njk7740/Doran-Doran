@@ -22,9 +22,10 @@
         height: '700px',
         initialValue: document.querySelector("#content").value,
         initialEditType: 'wysiwyg',
-        hideModeSwitch: true,
-
+        hideModeSwitch: true
     });
+
+    editor.removeToolbarItem("image");
 
     function submit() {
         document.querySelector("#subject").value = document.querySelector(".title").value;
