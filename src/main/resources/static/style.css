@@ -11,6 +11,10 @@ textarea::-webkit-scrollbar {
   display: none;
 }
 
+#alart::-webkit-scrollbar {
+  display: none;
+}
+
 .navbar {
     background-color:#B8CEEC;
 }
@@ -243,4 +247,25 @@ a {
     border:1px solid #ccf;
     border-radius:30px;
     box-shadow:3px 3px gray;
+}
+
+#alart {
+    height:300px;
+    overflow:scroll;
+    margin-top:10px;
+}
+
+#alart > div {
+    margin:20px 0;
+}
+
+#alart p {
+    margin:0;
+    font-size:15px;
+}
+
+#alart a {
+    text-decoration:underline;
+    font-weight:bold;
+    color:#066;
 }

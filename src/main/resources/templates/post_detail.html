@@ -5,6 +5,7 @@
             <div id="subject" th:text="${post.subject}" class="text-center"></div>
             <div class="d-flex justify-content-between align-items-center border-bottom">
                 <div>
+                    <img th:src="@{${post.author.picture}}" alt="" style="width:30px; margin-bottom:10px; border-radius:10px;">
                     <a class="author-name" th:text="${post.author.nickname}"
                        th:href="@{|/user/info/${post.author.username}|}"></a>
                     <span class="post-createDate"

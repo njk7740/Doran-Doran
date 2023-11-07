@@ -1,5 +1,6 @@
 package com.voda.blog.user;
 
+import com.voda.blog.alarm.Alarm;
 import com.voda.blog.comment.Comment;
 import com.voda.blog.post.Post;
 import jakarta.persistence.*;
@@ -41,21 +42,23 @@ public class SiteUser {
     private List<Comment> commentList;
     private String picture;
     private Set<String> favorite;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Alarm> alarm;
 
     public SiteUser(String key, String name, String email, String picture, LocalDateTime time) {
-        this.nickname = name;
+        this.rName = name;
         this.username = key;
         this.email = email;
         this.picture = (picture == null) ? "/default-profile.png" : picture;
         this.createDate = time;
-        favorite = new HashSet<>();
+        this.favorite = new HashSet<>();
     }
 
     public SiteUser() {
-        favorite = new HashSet<>();
+        this.favorite = new HashSet<>();
     }
     public SiteUser update(String name, String picture) {
-        this.nickname = name;
+        this.rName = name;
         this.picture = picture;
 
         return this;

@@ -59,24 +59,28 @@ public class UserController {
     @GetMapping("/{username}/writePost")
     public String writePost(Model model, @PathVariable(value = "username") String username, @RequestParam(value = "page",
             defaultValue = "0") int page, Principal principal) {
-        SiteUser user = userService.getByUsername(username);
-        Page<Post> postList = postService.getByAuthor(page, user);
-        model.addAttribute("target", user);
+        SiteUser target = userService.getByUsername(username);
+        Page<Post> postList = postService.getByAuthor(page, target);
         model.addAttribute("postList", postList);
         if (principal != null) {
+            SiteUser user = userService.getByUsername(principal.getName());
             model.addAttribute("own", username.equals(principal.getName()));
             model.addAttribute("user", userService.getByUsername(principal.getName()));
+            model.addAttribute("target", target);
+            model.addAttribute("favorite", user.getFavorite().contains(target.getUsername()));
         } else model.addAttribute("own", false);
         return "user_myPost";
     }
 
     @GetMapping("/{username}/likePost")
     public String likePost(Model model, @PathVariable(value = "username") String username, Principal principal) {
-        SiteUser user = userService.getByUsername(username);
-        model.addAttribute("target", user);
+        SiteUser target = userService.getByUsername(username);
         if (principal != null) {
+            SiteUser user = userService.getByUsername(principal.getName());
             model.addAttribute("own", username.equals(principal.getName()));
-            model.addAttribute("user", userService.getByUsername(principal.getName()));
+            model.addAttribute("user", user);
+            model.addAttribute("favorite", user.getFavorite().contains(target.getUsername()));
+            model.addAttribute("target", target);
         } else model.addAttribute("own", false);
         return "user_likePost";
     }
@@ -86,6 +90,8 @@ public class UserController {
     public String modify(Model model, Principal principal, UserModifyForm userModifyForm) {
         SiteUser user = userService.getByUsername(principal.getName());
         model.addAttribute("user", user);
+        model.addAttribute("target", user);
+        model.addAttribute("own", true);
         userModifyForm.setAge(user.getAge());
         userModifyForm.setJob(user.getJob());
         userModifyForm.setAddress(user.getAddress());
@@ -165,5 +171,13 @@ public class UserController {
         SiteUser user = userService.getByUsername(principal.getName());
         userService.unfavor(user, username);
         return String.format("redirect:/user/info/%s", username);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/renick")
+    public String renick(String nickname, Principal principal) {
+        SiteUser user = userService.getByUsername(principal.getName());
+        userService.setNick(user, nickname);
+        return "redirect:/";
     }
 }

@@ -1,5 +1,6 @@
 package com.voda.blog.post;
 
+import com.voda.blog.alarm.AlarmService;
 import com.voda.blog.comment.CommentForm;
 import com.voda.blog.comment.CommentService;
 import com.voda.blog.user.SiteUser;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import java.security.Principal;
+import java.time.LocalDateTime;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,6 +23,7 @@ public class PostController {
     private final PostService postService;
     private final UserService userService;
     private final CommentService commentService;
+    private final AlarmService alarmService;
 
     @GetMapping("/list")
     public String list(Model model, Principal principal, @RequestParam(value = "page", defaultValue = "0") int page,
@@ -28,25 +32,31 @@ public class PostController {
         model.addAttribute("paging", postService.getList(page, kw, order));
         model.addAttribute("kw", kw);
         if (principal != null) {
-            model.addAttribute("user", userService.getByUsername(principal.getName()));
+            SiteUser user = userService.getByUsername(principal.getName());
+            if (user.getNickname() == null || user.getNickname().isEmpty()) return "user_setNick";
+            model.addAttribute("user", user);
+            model.addAttribute("alarmList", userService.getAlamList(user));
         }
         model.addAttribute("order", order);
+        model.addAttribute("newTime", LocalDateTime.now().minusHours(1));
+
         return "post_list";
     }
 
     @GetMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public String create(Model model, Principal principal) {
-        if (principal != null) model.addAttribute("user", userService.getByUsername(principal.getName()));
+        model.addAttribute("user", userService.getByUsername(principal.getName()));
         return "post_createForm";
     }
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public String create(Model model, Principal principal, String subject, String content) {
-        if (principal != null) model.addAttribute("user", userService.getByUsername(principal.getName()));
+        model.addAttribute("user", userService.getByUsername(principal.getName()));
         SiteUser user = userService.getByUsername(principal.getName());
-        postService.create(subject, content, user);
+        Post post = postService.create(subject, content, user);
+        alarmService.create(user, post, "create");
         return "redirect:/";
     }
 

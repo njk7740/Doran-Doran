@@ -1,12 +1,14 @@
 package com.voda.blog.user;
 
+import com.voda.blog.SortBy;
+import com.voda.blog.alarm.Alarm;
 import com.voda.blog.post.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -69,6 +71,27 @@ public class UserService {
 
     public void unfavor(SiteUser user, String username) {
         user.getFavorite().remove(username);
+        userRepository.save(user);
+    }
+
+    public List<Alarm> getAlamList(SiteUser user) {
+        List<Alarm> alarmList = new ArrayList<>();
+        Set<String> favorList = user.getFavorite();
+        for (String favor : favorList) {
+            SiteUser _user = getByUsername(favor);
+            for (Alarm a : _user.getAlarm())
+                if (a.getType().equals("create"))
+                    alarmList.add(a);
+        }
+        for (Alarm a : user.getAlarm())
+            if (a.getType().equals("comment"))
+                alarmList.add(a);
+        alarmList.sort(new SortBy());
+        return alarmList;
+    }
+
+    public void setNick(SiteUser user, String nickname) {
+        user.setNickname(nickname);
         userRepository.save(user);
     }
 }

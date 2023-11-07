@@ -20,7 +20,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserService userService;
 
-    public void create(String subject, String content, SiteUser user) {
+    public Post create(String subject, String content, SiteUser user) {
         Post post = new Post();
         post.setSubject(subject);
         post.setContent(content);
@@ -28,6 +28,7 @@ public class PostService {
         post.setAuthor(user);
         post.setLikerSize(0);
         postRepository.save(post);
+        return post;
     }
 
     public List<Post> getList() {

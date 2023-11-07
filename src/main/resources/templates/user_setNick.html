@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+    <title>Doran-Doran</title>
+</head>
+<body onload="document.querySelector('.visually-hidden').click();">
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary visually-hidden" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    Launch static backdrop modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/user/renick}" method="post">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">사용하실 닉네임을 입력해주세요</h1>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="nickname" name="nickname" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">확인</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:src="@{/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

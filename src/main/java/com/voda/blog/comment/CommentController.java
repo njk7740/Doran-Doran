@@ -1,5 +1,6 @@
 package com.voda.blog.comment;
 
+import com.voda.blog.alarm.AlarmService;
 import com.voda.blog.post.Post;
 import com.voda.blog.post.PostService;
 import com.voda.blog.user.SiteUser;
@@ -24,6 +25,7 @@ public class CommentController {
     private final CommentService commentService;
     private final PostService postService;
     private final UserService userService;
+    private final AlarmService alarmService;
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/{id}")
@@ -39,6 +41,7 @@ public class CommentController {
             return "post_detail";
         }
         commentService.create(post, user, commentForm.getContent());
+        alarmService.create(post.getAuthor(), post, "comment");
         return String.format("redirect:/post/detail/%s", id);
     }
 
