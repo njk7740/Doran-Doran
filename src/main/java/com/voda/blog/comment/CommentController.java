@@ -41,7 +41,7 @@ public class CommentController {
             return "post_detail";
         }
         commentService.create(post, user, commentForm.getContent());
-        alarmService.create(post.getAuthor(), post, "comment", user);
+        alarmService.create(post.getAuthor(), post.getId(), "comment", user);
         return String.format("redirect:/post/detail/%s", id);
     }
 

@@ -47,6 +47,8 @@ public class SiteUser {
     private Set<SiteUser> favoriteMe;
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Alarm> alarm;
+    @ManyToMany
+    private Set<SiteUser> friends;
 
     public SiteUser(String key, String name, String email, String picture, LocalDateTime time) {
         this.rName = name;

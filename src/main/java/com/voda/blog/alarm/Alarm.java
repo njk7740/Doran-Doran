@@ -1,6 +1,5 @@
 package com.voda.blog.alarm;
 
-import com.voda.blog.post.Post;
 import com.voda.blog.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,8 +19,7 @@ public class Alarm {
     @ManyToOne
     private SiteUser user;
     private String type;
-    @ManyToOne
-    private Post post;
+    private Integer postId;
     @ManyToOne
     private SiteUser target;
 

@@ -28,13 +28,31 @@
                 </div>
                 <div id="alart" sec:authorize="isAuthenticated()">
                     <div th:each="alarm : ${alarmList}">
-                        <div th:if="${alarm.type.equals('create')}">
-                            <a th:text="${alarm.target.nickname}" th:href="@{|/user/info/${alarm.target.username}|}"></a>
-                            <span>님이 <a th:href="@{|/post/detail/${alarm.post.id}|}">새 글</a>을 올렸습니다.</span>
-                        </div>
-                        <div th:if="${alarm.type.equals('comment')}">
-                            <a th:href="@{|/post/detail/${alarm.post.id}|}">내 글</a>
-                            <span>에 댓글이 달렸습니다.</span>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span th:if="${alarm.createDate > newTime}" class="badge bg-danger me-2">N</span>
+                            <div th:if="${alarm.type.equals('create')}">
+                                <a th:text="${alarm.target.nickname}"
+                                   th:href="@{|/user/info/${alarm.target.username}|}"></a>
+                                <span>님이 <a th:href="@{|/post/detail/${alarm.postId}|}">새 글</a>을 올렸습니다.</span>
+                            </div>
+                            <div th:if="${alarm.type.equals('comment')}">
+                                <a th:href="@{|/post/detail/${alarm.postId}|}">내 글</a>
+                                <span>에 댓글이 달렸습니다.</span>
+                            </div>
+                            <div th:if="${alarm.type.equals('reserveCreate')}">
+                                <a th:href="@{|/post/detail/${alarm.postId}|}">예약한 글</a>
+                                <span>이 등록되었습니다.</span>
+                            </div>
+                            <div th:if="${alarm.type.equals('requestFriend')}">
+                                <a th:text="${alarm.target.nickname}"
+                                   th:href="@{|/user/info/${alarm.target.username}|}"></a>
+                                <span>님에게 친구 요청을 보냈습니다.</span>
+                            </div>
+                            <div th:if="${alarm.type.equals('receiveFriendRequest')}">
+                                <a th:text="${alarm.target.nickname}"
+                                   th:href="@{|/user/info/${alarm.target.username}|}"></a>
+                                <span>님에게 친구 요청이 왔습니다.</span>
+                            </div>
                         </div>
                         <span class="badge bg-dark"
                               th:text="${#temporals.format(alarm.createDate, 'yyyy-MM-dd HH:mm')}"></span>
@@ -66,7 +84,8 @@
                     <div class="card-footer text-body-secondary d-flex justify-content-between">
                         <span th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}"></span>
                         <span class="d-flex align-items-end">
-                            <img th:src="@{${post.author.picture}}" style="width:20px; margin-right:5px; border-radius:5px;">
+                            <img th:src="@{${post.author.picture}}"
+                                 style="width:20px; margin-right:5px; border-radius:5px;">
                             <span th:text="${post.author.nickname}"></span>
                         </span>
                     </div>

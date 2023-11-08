@@ -1,5 +1,6 @@
 package com.voda.blog.user;
 
+import com.voda.blog.SortBy;
 import com.voda.blog.alarm.Alarm;
 import com.voda.blog.post.Post;
 import lombok.RequiredArgsConstructor;
@@ -79,11 +80,23 @@ public class UserService {
     }
 
     public List<Alarm> getAlamList(SiteUser user) {
+        user.getAlarm().sort(new SortBy());
         return user.getAlarm();
     }
 
     public void setNick(SiteUser user, String nickname) {
         user.setNickname(nickname);
         userRepository.save(user);
+    }
+
+    public boolean hasRequestFriend(SiteUser user, SiteUser target) {
+        for (Alarm alarm : user.getAlarm())
+            if (alarm.getType().equals("requestFriend") && alarm.getTarget().getUsername().equals(target.getUsername()))
+                return true;
+        return false;
+    }
+
+    public void requestFriend(SiteUser user, SiteUser target) {
+
     }
 }

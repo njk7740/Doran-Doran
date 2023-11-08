@@ -1,5 +1,6 @@
 package com.voda.blog.user;
 
+import com.voda.blog.alarm.AlarmService;
 import com.voda.blog.post.Post;
 import com.voda.blog.post.PostService;
 import jakarta.validation.Valid;
@@ -23,6 +24,7 @@ import java.security.Principal;
 public class UserController {
     private final UserService userService;
     private final PostService postService;
+    private final AlarmService alarmService;
 
     @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
@@ -62,26 +64,13 @@ public class UserController {
         SiteUser target = userService.getByUsername(username);
         Page<Post> postList = postService.getByAuthor(page, target);
         model.addAttribute("postList", postList);
-        if (principal != null) {
-            SiteUser user = userService.getByUsername(principal.getName());
-            model.addAttribute("own", username.equals(principal.getName()));
-            model.addAttribute("user", userService.getByUsername(principal.getName()));
-            model.addAttribute("target", target);
-            model.addAttribute("favorite", user.getFavorite().contains(target));
-        } else model.addAttribute("own", false);
+        attributeInSide(model, principal, username);
         return "user_myPost";
     }
 
     @GetMapping("/{username}/likePost")
     public String likePost(Model model, @PathVariable(value = "username") String username, Principal principal) {
-        SiteUser target = userService.getByUsername(username);
-        if (principal != null) {
-            SiteUser user = userService.getByUsername(principal.getName());
-            model.addAttribute("own", username.equals(principal.getName()));
-            model.addAttribute("user", user);
-            model.addAttribute("favorite", user.getFavorite().contains(target));
-            model.addAttribute("target", target);
-        } else model.addAttribute("own", false);
+        attributeInSide(model, principal, username);
         return "user_likePost";
     }
 
@@ -146,14 +135,7 @@ public class UserController {
 
     @GetMapping("/info/{username}")
     public String info(Model model, @PathVariable(value = "username") String username, Principal principal) {
-        SiteUser target = userService.getByUsername(username);
-        model.addAttribute("target", target);
-        if (principal != null) {
-            SiteUser user = userService.getByUsername(principal.getName());
-            model.addAttribute("own", username.equals(principal.getName()));
-            model.addAttribute("user", user);
-            model.addAttribute("favorite", user.getFavorite().contains(target));
-        } else model.addAttribute("own", false);
+        attributeInSide(model, principal, username);
         return "user_info";
     }
 
@@ -181,5 +163,27 @@ public class UserController {
         SiteUser user = userService.getByUsername(principal.getName());
         userService.setNick(user, nickname);
         return "redirect:/";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/requestFriend/{username}")
+    public String friend(@PathVariable(value = "username") String username, Principal principal) {
+        SiteUser user = userService.getByUsername(principal.getName());
+        SiteUser target = userService.getByUsername(username);
+        alarmService.create(target, null, "receiveFriendRequest", user);
+        alarmService.create(user, null, "requestFriend", target);
+        return String.format("redirect:/user/info/%s", username);
+    }
+
+    public void attributeInSide(Model model, Principal principal, String username) {
+        SiteUser target = userService.getByUsername(username);
+        model.addAttribute("target", target);
+        if (principal != null) {
+            SiteUser user = userService.getByUsername(principal.getName());
+            model.addAttribute("own", username.equals(principal.getName()));
+            model.addAttribute("user", user);
+            model.addAttribute("favorite", user.getFavorite().contains(target));
+            model.addAttribute("hasRequest", userService.hasRequestFriend(user, target));
+        } else model.addAttribute("own", false);
     }
 }

@@ -3,6 +3,7 @@ package com.voda.blog.post;
 import com.voda.blog.alarm.AlarmService;
 import com.voda.blog.comment.CommentForm;
 import com.voda.blog.comment.CommentService;
+import com.voda.blog.scheduler.SchedulerService;
 import com.voda.blog.user.SiteUser;
 import com.voda.blog.user.UserService;
 import jakarta.validation.Valid;
@@ -24,6 +25,7 @@ public class PostController {
     private final UserService userService;
     private final CommentService commentService;
     private final AlarmService alarmService;
+    private final SchedulerService schedulerService;
 
     @GetMapping("/list")
     public String list(Model model, Principal principal, @RequestParam(value = "page", defaultValue = "0") int page,
@@ -47,6 +49,7 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     public String create(Model model, Principal principal) {
         model.addAttribute("user", userService.getByUsername(principal.getName()));
+        model.addAttribute("create", true);
         return "post_createForm";
     }
 
@@ -57,7 +60,22 @@ public class PostController {
         SiteUser user = userService.getByUsername(principal.getName());
         Post post = postService.create(subject, content, user);
         for (SiteUser _user : user.getFavoriteMe())
-            alarmService.create(_user, post, "create", user);
+            alarmService.create(_user, post.getId(), "create", user);
+        return "redirect:/";
+    }
+
+    @PostMapping("/reserve")
+    @PreAuthorize("isAuthenticated()")
+    public String reserve(Model model, Principal principal, String r_subject, String r_content, LocalDateTime time) {
+        if (time.isBefore(LocalDateTime.now())) {
+            model.addAttribute("user", userService.getByUsername(principal.getName()));
+            model.addAttribute("subject", r_subject);
+            model.addAttribute("content", r_content);
+            model.addAttribute("alarm", "현재 또는 이전으로 설정할 수 없습니다.");
+            return "post_createForm";
+        }
+        schedulerService.setCron(time);
+        schedulerService.start(r_subject, r_content, userService.getByUsername(principal.getName()));
         return "redirect:/";
     }
 
@@ -83,6 +101,7 @@ public class PostController {
         if (!post.getAuthor().getUsername().equals(principal.getName())) throw new RuntimeException("권한이 없습니다");
         model.addAttribute("subject", post.getSubject());
         model.addAttribute("content", post.getContent());
+        model.addAttribute("create", false);
         return "post_createForm";
     }
 
