@@ -41,7 +41,10 @@ public class SiteUser {
     @OneToMany(mappedBy = "author")
     private List<Comment> commentList;
     private String picture;
-    private Set<String> favorite;
+    @ManyToMany
+    private Set<SiteUser> favorite;
+    @ManyToMany
+    private Set<SiteUser> favoriteMe;
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Alarm> alarm;
 

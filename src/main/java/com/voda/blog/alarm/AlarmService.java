@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
 public class AlarmService {
     private final AlarmRepository alarmRepository;
 
-    public void create(SiteUser user, Post post, String type) {
+    public void create(SiteUser user, Post post, String type, SiteUser target) {
         Alarm alarm = new Alarm(user, type);
         alarm.setPost(post);
+        alarm.setTarget(target);
         alarmRepository.save(alarm);
     }
 }

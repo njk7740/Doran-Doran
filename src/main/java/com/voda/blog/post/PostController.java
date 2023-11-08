@@ -56,7 +56,8 @@ public class PostController {
         model.addAttribute("user", userService.getByUsername(principal.getName()));
         SiteUser user = userService.getByUsername(principal.getName());
         Post post = postService.create(subject, content, user);
-        alarmService.create(user, post, "create");
+        for (SiteUser _user : user.getFavoriteMe())
+            alarmService.create(_user, post, "create", user);
         return "redirect:/";
     }
 

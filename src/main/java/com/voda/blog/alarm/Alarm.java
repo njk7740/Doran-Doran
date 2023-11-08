@@ -22,6 +22,8 @@ public class Alarm {
     private String type;
     @ManyToOne
     private Post post;
+    @ManyToOne
+    private SiteUser target;
 
     public Alarm(SiteUser user, String type) {
         this.user = user;

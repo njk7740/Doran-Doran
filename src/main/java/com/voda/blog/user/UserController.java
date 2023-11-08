@@ -67,7 +67,7 @@ public class UserController {
             model.addAttribute("own", username.equals(principal.getName()));
             model.addAttribute("user", userService.getByUsername(principal.getName()));
             model.addAttribute("target", target);
-            model.addAttribute("favorite", user.getFavorite().contains(target.getUsername()));
+            model.addAttribute("favorite", user.getFavorite().contains(target));
         } else model.addAttribute("own", false);
         return "user_myPost";
     }
@@ -79,7 +79,7 @@ public class UserController {
             SiteUser user = userService.getByUsername(principal.getName());
             model.addAttribute("own", username.equals(principal.getName()));
             model.addAttribute("user", user);
-            model.addAttribute("favorite", user.getFavorite().contains(target.getUsername()));
+            model.addAttribute("favorite", user.getFavorite().contains(target));
             model.addAttribute("target", target);
         } else model.addAttribute("own", false);
         return "user_likePost";
@@ -152,7 +152,7 @@ public class UserController {
             SiteUser user = userService.getByUsername(principal.getName());
             model.addAttribute("own", username.equals(principal.getName()));
             model.addAttribute("user", user);
-            model.addAttribute("favorite", user.getFavorite().contains(target.getUsername()));
+            model.addAttribute("favorite", user.getFavorite().contains(target));
         } else model.addAttribute("own", false);
         return "user_info";
     }
@@ -161,7 +161,8 @@ public class UserController {
     @GetMapping("/favorite/{username}")
     public String favorite(@PathVariable(value = "username") String username, Principal principal) {
         SiteUser user = userService.getByUsername(principal.getName());
-        userService.favorite(user, username);
+        SiteUser target = userService.getByUsername(username);
+        userService.favorite(user, target);
         return String.format("redirect:/user/info/%s", username);
     }
 
@@ -169,7 +170,8 @@ public class UserController {
     @GetMapping("/unfavor/{username}")
     public String unfavor(@PathVariable(value = "username") String username, Principal principal) {
         SiteUser user = userService.getByUsername(principal.getName());
-        userService.unfavor(user, username);
+        SiteUser target = userService.getByUsername(username);
+        userService.unfavor(user, target);
         return String.format("redirect:/user/info/%s", username);
     }
 

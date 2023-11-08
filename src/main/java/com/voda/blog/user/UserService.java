@@ -1,6 +1,5 @@
 package com.voda.blog.user;
 
-import com.voda.blog.SortBy;
 import com.voda.blog.alarm.Alarm;
 import com.voda.blog.post.Post;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +7,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -64,30 +64,22 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void favorite(SiteUser user, String username) {
-        user.getFavorite().add(username);
+    public void favorite(SiteUser user, SiteUser target) {
+        user.getFavorite().add(target);
+        target.getFavoriteMe().add(user);
         userRepository.save(user);
+        userRepository.save(target);
     }
 
-    public void unfavor(SiteUser user, String username) {
-        user.getFavorite().remove(username);
+    public void unfavor(SiteUser user, SiteUser target) {
+        user.getFavorite().remove(target);
+        target.getFavoriteMe().remove(user);
         userRepository.save(user);
+        userRepository.save(target);
     }
 
     public List<Alarm> getAlamList(SiteUser user) {
-        List<Alarm> alarmList = new ArrayList<>();
-        Set<String> favorList = user.getFavorite();
-        for (String favor : favorList) {
-            SiteUser _user = getByUsername(favor);
-            for (Alarm a : _user.getAlarm())
-                if (a.getType().equals("create"))
-                    alarmList.add(a);
-        }
-        for (Alarm a : user.getAlarm())
-            if (a.getType().equals("comment"))
-                alarmList.add(a);
-        alarmList.sort(new SortBy());
-        return alarmList;
+        return user.getAlarm();
     }
 
     public void setNick(SiteUser user, String nickname) {
