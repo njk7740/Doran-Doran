@@ -5,17 +5,74 @@
                 <img class="logo" th:src="@{/Doran.png}">
             </a>
             <div class="nav-item mx-3"><a class="nav-link" href="/">홈</a></div>
-            <!--상단 바 중앙-->
-            <div class="nav-item dropdown mx-3">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Dropdown
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
+            <div class="nav-item mx-3" sec:authorize="isAuthenticated()"><a class="nav-link" role="button"
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#friendList">친구 목록</a></div>
+            <div class="nav-item mx-3"><a class="nav-link" th:href="@{/user/myMessage}">쪽지함</a></div>
+            <div sec:authorize="isAuthenticated()" class="modal fade" id="friendList" tabindex="-1"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="friendListLabel">친구 목록</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card" style="width:250px;">
+                                <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                    <div class="btn-group dropstart" role="group" th:each="friend : ${user.friends}">
+                                        <button type="button" class="btn btn-outline-primary dropdown-toggle"
+                                                data-bs-toggle="dropdown" aria-expanded="false"
+                                                th:text="${friend.nickname}">
+                                        </button>
+                                        <ul class="dropdown-menu position-absolute">
+                                            <li><a class="dropdown-item"
+                                                   th:href="@{|/user/info/${friend.username}|}">프로필</a></li>
+                                            <li>
+                                                <a role="button" class="dropdown-item message" data-bs-toggle="modal"
+                                                   data-bs-target="#messageForm">
+                                                    쪽지 보내기
+                                                    <input type="hidden" th:value="${friend.username}">
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" sec:authorize="isAuthenticated()" id="messageForm"
+                 aria-hidden="true" aria-labelledby="exampleModalToggleLabel2"
+                 tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="messageFormLabel">쪽지</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/message/send}" id="messageSetForm" method="post">
+                                <input type="hidden" id="receiver" name="receiver">
+                                <textarea name="message" id="message" rows="10" class="form-control"
+                                          placeholder="쪽지 내용을 입력해주세요" style="overflow:scroll;"></textarea>
+                            </form>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-between">
+                            <button class="btn btn-secondary" data-bs-target="#friendList"
+                                    data-bs-toggle="modal">뒤로가기
+                            </button>
+                            <button class="btn btn-primary" type="button"
+                                    onclick="document.querySelector('#messageSetForm').submit();">보내기
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="d-flex align-items-center me-3">
@@ -26,7 +83,8 @@
                 </button>
                 <div class="collapse" id="portalSearch">
                     <div class="card card-body p-3" style="height:auto;">
-                        <input type="search" class="form-control mb-3" placeholder="구글 검색" style="border:2px solid #E6776A"
+                        <input type="search" class="form-control mb-3" placeholder="구글 검색"
+                               style="border:2px solid #E6776A"
                                onkeydown="if (window.event.keyCode == 13) window.open('https://www.google.com/search?q=' + this.value);">
                         <input type="search" class="form-control" placeholder="네이버 검색" style="border:2px solid #8DD58F"
                                onkeydown="if (window.event.keyCode == 13) window.open('https://search.naver.com/search.naver?query=' + this.value);">
@@ -49,10 +107,10 @@
                 <h5 class="offcanvas-title" id="offcanvasNavbarLabel" style="font-weight:bold;">프로필</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div class="offcanvas-body">
+            <div class="offcanvas-body" style="overflow:visible;">
                 <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                    <li class="nav-item">
-                        <div class="card ms-5" style="width:18rem;">
+                    <li class="nav-item ms-5">
+                        <div class="card" style="width:18rem;">
                             <div class="card-body">
                                 <img th:src="@{${user.picture}}" style="width:130px; height:130px; border-radius:10px;">
                                 <h5 class="card-title text-dark mt-3 mb-0" th:text="${user.nickname}"></h5>

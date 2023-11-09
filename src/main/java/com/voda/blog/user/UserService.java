@@ -96,7 +96,12 @@ public class UserService {
         return false;
     }
 
-    public void requestFriend(SiteUser user, SiteUser target) {
+    public void makeFriend(SiteUser user, SiteUser target) {
+        user.getFriends().add(target);
+        target.getFriends().add(user);
+    }
 
+    public boolean isFriend(SiteUser user, SiteUser target) {
+        return user.getFriends().contains(target);
     }
 }

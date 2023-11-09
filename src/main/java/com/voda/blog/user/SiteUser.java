@@ -2,6 +2,7 @@ package com.voda.blog.user;
 
 import com.voda.blog.alarm.Alarm;
 import com.voda.blog.comment.Comment;
+import com.voda.blog.message.Message;
 import com.voda.blog.post.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -49,6 +50,11 @@ public class SiteUser {
     private List<Alarm> alarm;
     @ManyToMany
     private Set<SiteUser> friends;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
+    private List<Message> sendMessage;
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.REMOVE)
+    private List<Message> receiveMessage;
+
 
     public SiteUser(String key, String name, String email, String picture, LocalDateTime time) {
         this.rName = name;

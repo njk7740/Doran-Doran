@@ -10,9 +10,12 @@
         </div>
         <div class="mb-3 d-flex justify-content-between" sec:authorize="isAuthenticated()" th:if="${!own}">
             <div class="ms-3">
-                <a th:href="@{|/user/requestFriend/${target.username}|}" class="btn btn-primary"
-                   th:if="${!hasRequest}">친구 요청</a>
-                <a href="#" class="btn btn-secondary disabled" th:if="${hasRequest}">친구 요청 완료</a>
+                <div th:if="${!isFriend}">
+                    <a th:href="@{|/user/requestFriend/${target.username}|}" class="btn btn-primary"
+                       th:if="${!hasRequest}">친구 요청</a>
+                    <a href="#" class="btn btn-secondary disabled" th:if="${hasRequest}">친구 요청 완료</a>
+                </div>
+                <div th:if="${isFriend}"><a href="#" class="btn btn-secondary disabled">친구 사이</a></div>
             </div>
             <div>
                 <a th:href="@{|/user/favorite/${target.username}|}" class="me-3" th:if="${!favorite}">

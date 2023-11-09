@@ -15,4 +15,11 @@ public class AlarmService {
         alarm.setTarget(target);
         alarmRepository.save(alarm);
     }
+
+    public void delete(SiteUser user, SiteUser target, String type) {
+        for (Alarm alarm : user.getAlarm()) {
+            if (alarm.getType().equals(type) && alarm.getTarget().getUsername().equals(target.getUsername()))
+                alarmRepository.delete(alarm);
+        }
+    }
 }

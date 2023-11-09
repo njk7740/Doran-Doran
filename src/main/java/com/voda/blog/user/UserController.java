@@ -1,6 +1,7 @@
 package com.voda.blog.user;
 
 import com.voda.blog.alarm.AlarmService;
+import com.voda.blog.message.MessageService;
 import com.voda.blog.post.Post;
 import com.voda.blog.post.PostService;
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ public class UserController {
     private final UserService userService;
     private final PostService postService;
     private final AlarmService alarmService;
+    private final MessageService messageService;
 
     @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
@@ -184,6 +186,40 @@ public class UserController {
             model.addAttribute("user", user);
             model.addAttribute("favorite", user.getFavorite().contains(target));
             model.addAttribute("hasRequest", userService.hasRequestFriend(user, target));
+            model.addAttribute("isFriend", userService.isFriend(user, target));
         } else model.addAttribute("own", false);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/friend/accept/{username}")
+    public String acceptFriend(Principal principal, @PathVariable(value = "username") String username) {
+        SiteUser user = userService.getByUsername(principal.getName());
+        SiteUser target = userService.getByUsername(username);
+        userService.makeFriend(user, target);
+        alarmService.delete(user, target, "receiveFriendRequest");
+        alarmService.delete(target, user, "requestFriend");
+        alarmService.create(user, null, "acceptFriend", target);
+        alarmService.create(target, null, "acceptFriend", user);
+        return "redirect:/";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/friend/refuse/{username}")
+    public String refuseFriend(Principal principal, @PathVariable(value = "username") String username) {
+        SiteUser user = userService.getByUsername(principal.getName());
+        SiteUser target = userService.getByUsername(username);
+        alarmService.delete(user, target, "receiveFriendRequest");
+        alarmService.create(target, null, "refuseFriend", user);
+        return "redirect:/";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/myMessage")
+    public String  myMessage(Model model, Principal principal) {
+        SiteUser user = userService.getByUsername(principal.getName());
+        model.addAttribute("user", user);
+        model.addAttribute("sendMessageList", messageService.getSendMessage(user));
+        model.addAttribute("receiveMessageList", messageService.getReceiveMessage(user));
+        return "user_message";
     }
 }

@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.css"/>
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
     <title>Doran-Doran</title>
 </head>
 <body>
@@ -14,5 +14,14 @@
 <script th:src="@{/bootstrap.bundle.min.js}"></script>
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 <script layout:fragment="script" type="text/javascript"></script>
+<script type="text/javascript">
+    const messageBtn = document.querySelectorAll('.message');
+    Array.from(messageBtn).forEach(function(element) {
+        element.addEventListener('click', function() {
+            document.querySelector('#receiver').value = element.firstElementChild.value;
+            console.log(element.firstElementChild.value);
+        });
+    });
+</script>
 </body>
 </html>
