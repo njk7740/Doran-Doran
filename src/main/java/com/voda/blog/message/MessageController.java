@@ -24,9 +24,9 @@ public class MessageController {
     public String send(String message, String receiver, Principal principal) {
         SiteUser user = userService.getByUsername(principal.getName());
         SiteUser target = userService.getByUsername(receiver);
-        messageService.create(user, target, message);
-        alarmService.create(user, null, "sendMessage", target);
-        alarmService.create(target, null, "receiveMessage", user);
+        Message m = messageService.create(user, target, message);
+        alarmService.create(user, m, "sendMessage", target);
+        alarmService.create(target, m, "receiveMessage", user);
         return "redirect:/";
     }
 }

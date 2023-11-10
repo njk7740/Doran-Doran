@@ -269,3 +269,11 @@ a {
     font-weight:bold;
     color:#066;
 }
+
+#listContent {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}

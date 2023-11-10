@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
     List<Alarm> findByUser(SiteUser user);
+
 }

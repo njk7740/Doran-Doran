@@ -12,13 +12,14 @@ import java.util.List;
 public class MessageService {
     private final MessageRepository messageRepository;
 
-    public void create(SiteUser author, SiteUser receiver, String content) {
+    public Message create(SiteUser author, SiteUser receiver, String content) {
         Message message = new Message();
         message.setAuthor(author);
         message.setReceiver(receiver);
         message.setContent(content);
         message.setCreateDate(LocalDateTime.now());
         messageRepository.save(message);
+        return message;
     }
 
     public List<Message> getSendMessage(SiteUser user) {

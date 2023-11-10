@@ -5,10 +5,12 @@
                 <img class="logo" th:src="@{/Doran.png}">
             </a>
             <div class="nav-item mx-3"><a class="nav-link" href="/">홈</a></div>
-            <div class="nav-item mx-3" sec:authorize="isAuthenticated()"><a class="nav-link" role="button"
-                                                                            data-bs-toggle="modal"
-                                                                            data-bs-target="#friendList">친구 목록</a></div>
-            <div class="nav-item mx-3"><a class="nav-link" th:href="@{/user/myMessage}">쪽지함</a></div>
+            <div class="nav-item mx-3" sec:authorize="isAuthenticated()">
+                <a class="nav-link" role="button" data-bs-toggle="modal" data-bs-target="#friendList">친구 목록</a>
+            </div>
+            <div class="nav-item mx-3" sec:authorize="isAuthenticated()">
+                <a class="nav-link" th:href="@{/user/myMessage}">쪽지함</a>
+            </div>
             <div sec:authorize="isAuthenticated()" class="modal fade" id="friendList" tabindex="-1"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-sm">
@@ -35,6 +37,11 @@
                                                     <input type="hidden" th:value="${friend.username}">
                                                 </a>
                                             </li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item text-danger"
+                                                   th:href="@{|/user/friend/break/${friend.username}|}">친구 삭제</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -64,9 +71,7 @@
                             </form>
                         </div>
                         <div class="modal-footer d-flex justify-content-between">
-                            <button class="btn btn-secondary" data-bs-target="#friendList"
-                                    data-bs-toggle="modal">뒤로가기
-                            </button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
                             <button class="btn btn-primary" type="button"
                                     onclick="document.querySelector('#messageSetForm').submit();">보내기
                             </button>

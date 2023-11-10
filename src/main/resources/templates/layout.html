@@ -19,7 +19,6 @@
     Array.from(messageBtn).forEach(function(element) {
         element.addEventListener('click', function() {
             document.querySelector('#receiver').value = element.firstElementChild.value;
-            console.log(element.firstElementChild.value);
         });
     });
 </script>

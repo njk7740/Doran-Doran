@@ -1,6 +1,6 @@
 <div th:fragment="alarm" th:each="alarm : ${alarmList}">
     <div class="d-flex justify-content-center align-items-center">
-        <span th:if="${alarm.createDate > newTime}" class="badge bg-danger me-2">N</span>
+        <span th:if="${!alarm.confirm}" class="badge bg-danger me-2">N</span>
         <div th:if="${alarm.type.equals('create')}">
             <a th:text="${alarm.target.nickname}"
                th:href="@{|/user/info/${alarm.target.username}|}"></a>
@@ -23,27 +23,33 @@
             <a th:text="${alarm.target.nickname}"
                th:href="@{|/user/info/${alarm.target.username}|}"></a>
             <span>님에게 친구 요청이 왔습니다.</span>
-            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
+                    th:data-bs-target="|#friendModal_${alarm.id}|">
                 열기
             </button>
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" th:id="|friendModal_${alarm.id}|" tabindex="-1"
+                 th:aria-labelledby="|friendModalLabel_${alarm.id}|" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">친구 요청</h1>
+                            <h1 class="modal-title fs-5" th:id="|friendModalLabel_${alarm.id}|">친구 요청</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="card" style="height:200px;">
                                 <div class="card-body">
-                                    <img th:src="@{${alarm.target.picture}}" style="width:130px; height:130px; border-radius:10px;">
+                                    <img th:src="@{${alarm.target.picture}}"
+                                         style="width:130px; height:130px; border-radius:10px;">
                                     <h5 class="card-title text-dark mt-3 mb-0" th:text="${alarm.target.nickname}"></h5>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer d-flex justify-content-between">
-                            <a th:href="@{|/user/friend/refuse/${alarm.target.username}|}" type="button" class="btn btn-secondary" style="color:white;text-decoration:none;">거절</a>
-                            <a th:href="@{|/user/friend/accept/${alarm.target.username}|}" type="button" class="btn btn-primary" style="color:white;text-decoration:none;">수락</a>
+                            <a th:href="@{|/user/friend/refuse/${alarm.target.username}|}" type="button"
+                               class="btn btn-secondary" style="color:white;text-decoration:none;">거절</a>
+                            <a th:href="@{|/user/friend/accept/${alarm.target.username}|}" type="button"
+                               class="btn btn-primary"
+                               style="color:white;text-decoration:none;">수락</a>
                         </div>
                     </div>
                 </div>
@@ -67,9 +73,55 @@
         <div th:if="${alarm.type.equals('receiveMessage')}">
             <a th:text="${alarm.target.nickname}"
                th:href="@{|/user/info/${alarm.target.username}|}"></a>
-            <span>님에게 쪽지를 받았습니다.</span>
+            <span>님에게 </span>
+            <a role="button" data-bs-toggle="modal" th:data-bs-target="|#readMessage_${alarm.id}|">쪽지</a>
+            <span>를 받았습니다.</span>
+            <div class="modal fade" th:id="|readMessage_${alarm.id}|" tabindex="-1"
+                 th:aria-labelledby="|readMessageLabel_${alarm.id}|" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" th:id="|readMessageLabel_${alarm.id}|">
+                                <img th:src="@{${alarm.target.picture}}"
+                                     style="width:20px; margin-right:5px; border-radius:5px;">
+                                <span th:text="${alarm.target.nickname}"></span>
+                            </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p th:text="${alarm.message.content}"></p>
+                            <div class="text-end">
+                        <span class="me-3 badge bg-dark"
+                              th:text="${#temporals.format(alarm.message.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-between">
+                            <button class="message btn btn-success" data-bs-toggle="modal"
+                                    data-bs-target="#messageForm">
+                                답장
+                                <input type="hidden" th:value="${alarm.target.username}">
+                            </button>
+                            <a class="btn btn-primary text-light" th:href="@{|/alarm/confirm/${alarm.id}|}"
+                               style="text-decoration:none;">확인</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:if="${alarm.type.equals('breakFriend')}">
+            <a th:text="${alarm.target.nickname}"
+               th:href="@{|/user/info/${alarm.target.username}|}"></a>
+            <span>님이 친구목록에서 삭제되었습니다.</span>
         </div>
     </div>
-    <span class="badge bg-dark"
-          th:text="${#temporals.format(alarm.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+    <div class="d-flex justify-content-between align-items-center">
+        <div></div>
+        <span class="badge bg-dark"
+              th:text="${#temporals.format(alarm.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+        <div>
+            <a th:if="${!alarm.confirm}" class="btn btn-primary btn-sm text-light py-0"
+               th:href="@{|/alarm/confirm/${alarm.id}|}"
+               style="text-decoration:none;">확인</a>
+        </div>
+    </div>
 </div>

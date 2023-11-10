@@ -1,5 +1,6 @@
 package com.voda.blog.alarm;
 
+import com.voda.blog.message.Message;
 import com.voda.blog.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,12 +23,20 @@ public class Alarm {
     private Integer postId;
     @ManyToOne
     private SiteUser target;
+    @ManyToOne
+    private Message message;
+    private boolean confirm;
 
-    public Alarm(SiteUser user, String type) {
+    public Alarm(SiteUser user, String type, SiteUser target) {
         this.user = user;
+        this.target = target;
         this.createDate = LocalDateTime.now();
         this.type = type;
+        this.confirm = false;
     }
 
-    public Alarm() {}
+    public Alarm() {
+        this.createDate = LocalDateTime.now();
+        this.confirm = false;
+    }
 }

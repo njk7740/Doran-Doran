@@ -172,8 +172,8 @@ public class UserController {
     public String friend(@PathVariable(value = "username") String username, Principal principal) {
         SiteUser user = userService.getByUsername(principal.getName());
         SiteUser target = userService.getByUsername(username);
-        alarmService.create(target, null, "receiveFriendRequest", user);
-        alarmService.create(user, null, "requestFriend", target);
+        alarmService.create(target, "receiveFriendRequest", user);
+        alarmService.create(user, "requestFriend", target);
         return String.format("redirect:/user/info/%s", username);
     }
 
@@ -198,8 +198,8 @@ public class UserController {
         userService.makeFriend(user, target);
         alarmService.delete(user, target, "receiveFriendRequest");
         alarmService.delete(target, user, "requestFriend");
-        alarmService.create(user, null, "acceptFriend", target);
-        alarmService.create(target, null, "acceptFriend", user);
+        alarmService.create(user, "acceptFriend", target);
+        alarmService.create(target, "acceptFriend", user);
         return "redirect:/";
     }
 
@@ -209,7 +209,8 @@ public class UserController {
         SiteUser user = userService.getByUsername(principal.getName());
         SiteUser target = userService.getByUsername(username);
         alarmService.delete(user, target, "receiveFriendRequest");
-        alarmService.create(target, null, "refuseFriend", user);
+        alarmService.delete(target, user, "requestFriend");
+        alarmService.create(target, "refuseFriend", user);
         return "redirect:/";
     }
 
@@ -221,5 +222,17 @@ public class UserController {
         model.addAttribute("sendMessageList", messageService.getSendMessage(user));
         model.addAttribute("receiveMessageList", messageService.getReceiveMessage(user));
         return "user_message";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/friend/break/{username}")
+    public String breakFriend(Principal principal, @PathVariable(value = "username") String username) {
+        SiteUser user = userService.getByUsername(principal.getName());
+        SiteUser target = userService.getByUsername(username);
+
+        userService.breakFriend(user, target);
+        alarmService.create(user, "breakFriend", target);
+        alarmService.create(target, "breakFriend", user);
+        return "redirect:/";
     }
 }

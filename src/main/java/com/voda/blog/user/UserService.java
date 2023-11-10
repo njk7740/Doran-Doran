@@ -104,4 +104,9 @@ public class UserService {
     public boolean isFriend(SiteUser user, SiteUser target) {
         return user.getFriends().contains(target);
     }
+
+    public void breakFriend(SiteUser user, SiteUser target) {
+        user.getFriends().remove(target);
+        target.getFriends().remove(user);
+    }
 }
