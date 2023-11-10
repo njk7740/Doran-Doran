@@ -104,8 +104,7 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/info/modifyPicture")
     public String modifyPicture(Model model, Principal principal) {
-        SiteUser user = userService.getByUsername(principal.getName());
-        model.addAttribute("user", user);
+        attributeInSide(model, principal, principal.getName());
         return "user_modifyPicture";
     }
 
@@ -157,6 +156,12 @@ public class UserController {
         SiteUser target = userService.getByUsername(username);
         userService.unfavor(user, target);
         return String.format("redirect:/user/info/%s", username);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/renick")
+    public String renick() {
+        return "user_setNick";
     }
 
     @PreAuthorize("isAuthenticated()")

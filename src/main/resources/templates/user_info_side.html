@@ -4,7 +4,11 @@
             <div class="text-end" th:if="${own}"><a th:href="@{/user/info/modifyPicture}"
                                                     class="badge bg-primary text-light">사진 변경</a></div>
             <img th:src="@{${target.picture}}" style="width:200px;height:200px;border-radius:20px;">
-            <h5 class="card-title my-3" th:text="${target.nickname}"></h5>
+            <div class="card-title my-3">
+                <h5 class="mb-0" th:text="${target.nickname}"></h5>
+                <div class="text-center" th:if="${own}"><a th:href="@{/user/renick}"
+                                                           class="badge bg-primary text-light">닉네임 변경</a></div>
+            </div>
             <p class="card-text" th:text="${target.job}"></p>
             <p class="card-text text-secondary" th:text="${target.address}"></p>
         </div>
