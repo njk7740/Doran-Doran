@@ -54,6 +54,7 @@ public class SiteUser {
     private List<Message> sendMessage;
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.REMOVE)
     private List<Message> receiveMessage;
+    private String role;
 
 
     public SiteUser(String key, String name, String email, String picture, LocalDateTime time) {
@@ -63,10 +64,12 @@ public class SiteUser {
         this.picture = (picture == null) ? "/default-profile.png" : picture;
         this.createDate = time;
         this.favorite = new HashSet<>();
+        this.role = "user";
     }
 
     public SiteUser() {
         this.favorite = new HashSet<>();
+        this.role = "user";
     }
     public SiteUser update(String name, String picture) {
         this.rName = name;
