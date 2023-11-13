@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.voda'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2-SNAPSHOT'
 
 java {
 	sourceCompatibility = '17'
@@ -41,6 +41,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.webjars:sockjs-client:1.1.2'
 	implementation 'org.webjars:stomp-websocket:2.3.3-1'
+	runtimeOnly 'org.postgresql:postgresql'
 }
 
 tasks.named('test') {
